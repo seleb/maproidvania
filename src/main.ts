@@ -20,6 +20,13 @@
 	);
 	const btnPins =
 		document.querySelectorAll<HTMLInputElement>('#options-pin input');
+	const divContext = document.querySelector<HTMLDivElement>('#context');
+	const btnMove = document.querySelector<HTMLButtonElement>('#context-move');
+	const btnDelete =
+		document.querySelector<HTMLButtonElement>('#context-delete');
+	const btnNotes =
+		document.querySelector<HTMLTextAreaElement>('#context-notes');
+	const ulImages = document.querySelector<HTMLUListElement>('#context-images');
 	if (
 		!formControls ||
 		!divMapContainer ||
@@ -34,7 +41,12 @@
 		!btnText ||
 		!btnAboutToggle ||
 		!btnColours.length ||
-		!btnPins.length
+		!btnPins.length ||
+		!divContext ||
+		!btnMove ||
+		!btnDelete ||
+		!btnNotes ||
+		!ulImages
 	)
 		throw new Error('Could not find elements');
 
@@ -161,9 +173,50 @@
 		window.addEventListener('pointerup', stopDragging, { once: true });
 	};
 
+	let selected: HTMLElement | null = null;
+	const contextSelect = (el: HTMLElement) => {
+		selected = el;
+		divContext.classList.add('show');
+		const r = selected.getBoundingClientRect();
+		divContext.style.top = `${
+			r.bottom < divMapContainer.clientHeight / 2
+				? r.bottom
+				: r.top - divContext.clientHeight
+		}px`;
+		divContext.style.left = `${
+			r.right < divMapContainer.clientWidth / 2
+				? r.right
+				: r.left - divContext.clientWidth
+		}px`;
+		selected.classList.add('selected');
+	};
+	const contextDeselect = () => {
+		divContext.classList.remove('show');
+		selected?.classList.remove('selected');
+		selected = null;
+	};
+	btnMove.addEventListener('click', () => {
+		window.alert('TODO: implement');
+	});
+	btnDelete.addEventListener('click', () => {
+		if (!selected) return;
+		const el = selected;
+		contextDeselect();
+		el.remove();
+	});
+
 	divMapContainer.addEventListener('pointerdown', (event) => {
 		event.preventDefault();
 		if (tool === 'select') {
+			contextDeselect();
+			const element = document.elementFromPoint(
+				event.pageX,
+				event.pageY
+			) as HTMLElement | null;
+			if (!element?.closest('#pins')) {
+				return;
+			}
+			contextSelect(element);
 		} else if (tool === 'pan') {
 			startDragging(event);
 		} else if (tool === 'pin') {
