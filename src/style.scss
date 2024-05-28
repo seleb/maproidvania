@@ -1,0 +1,253 @@
+:root {
+	color-scheme: dark;
+	color: #e5f3fc;
+	--darker: #04020f;
+	--dark: #3c1b26;
+	--dark-t: #{fade-out(#3c1b26, 0.25)};
+	--light: #b9a58d;
+	--lighter: #e5f3fc;
+}
+
+$breakpoint: 40em;
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: sans-serif;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 1rem;
+	background-color: var(--dark);
+	max-width: 40rem;
+	margin-inline: auto;
+}
+
+button,
+input[type="radio"],
+input[type="submit"],
+input[type="file"],
+label {
+	cursor: pointer;
+}
+
+input[type="search"],
+select {
+	color: inherit;
+	display: block;
+	box-sizing: border-box;
+	min-height: 2em;
+	min-width: 2em;
+	max-width: 100%;
+	width: 100%;
+	padding: 0.5rem;
+	font-size: 1em;
+	font-family: monospace;
+	background-color: var(--darker);
+	border: solid 1px transparent;
+	border-radius: 0.25rem;
+	tab-size: 2;
+
+	&:invalid {
+		border-color: #f00;
+	}
+
+	option {
+		color: inherit;
+		background-color: inherit;
+	}
+}
+
+a {
+	color: inherit;
+	transition: opacity 0.1s ease-out;
+
+	&:hover,
+	&:focus {
+		opacity: 0.8;
+	}
+}
+
+div#preloader {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	flex-direction: column;
+	background-color: var(--dark);
+	z-index: 100;
+}
+
+header,
+section {
+	margin-bottom: 1em;
+}
+
+#btn-about {
+	z-index: 2;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 0;
+	border: none;
+	background-color: var(--dark-t);
+}
+
+#about {
+	z-index: 1;
+	background-color: var(--dark-t);
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	padding: 2rem;
+	text-align: left;
+	padding-top: 0.5rem;
+	font-size: 0.9em;
+	display: block;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	&:not(.show) {
+		display: none;
+	}
+
+	>div>*:not(:first-child)::before {
+		content: '•';
+		margin-inline: 0.5rem;
+	}
+}
+
+#btn-about,
+#about {
+	border-top-left-radius: 0.25rem;
+	border-top: solid 1px var(--dark);
+	border-left: solid 1px var(--dark);
+}
+
+#controls {
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: auto;
+	padding: 0.5rem;
+	background-color: var(--dark-t);
+	border-bottom-right-radius: 0.25rem;
+	border-bottom: solid 1px var(--dark);
+	border-right: solid 1px var(--dark);
+
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.25rem;
+
+	label,
+	input {
+		pointer-events: auto;
+	}
+
+
+	#options-colour,
+	#options-pin {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem;
+
+		input {
+			appearance: none;
+		}
+
+		>* {
+			padding: 0;
+			margin: 0;
+			display: inline-block;
+			width: 2rem;
+			height: 2rem;
+			border: inset 0.25rem transparent;
+			border-radius: 50%;
+			transition: opacity 0.05s ease-out;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+
+			&:hover,
+			&:focus {
+				opacity: 0.8;
+			}
+
+			&:active {
+				opacity: 0.6;
+			}
+
+			&:checked,
+			&:has(:checked) {
+				border-color: var(--lighter);
+				opacity: 1;
+			}
+		}
+	}
+
+	#options-colour {
+		color: black;
+		font-size: 0;
+
+		>[value="#000000"] {
+			color: white;
+		}
+	}
+
+	#options-pin {
+		font-size: 110%;
+
+		input {
+			display: none;
+		}
+
+		>* {
+			background-color: var(--light);
+		}
+	}
+}
+
+#map-container {
+	z-index: -2;
+	position: absolute;
+	inset: 0;
+	background-color: black;
+	overflow: hidden;
+	background-image: url("./assets/grid.png");
+
+	#map {
+		position: absolute;
+		inset: 0;
+		user-select: none;
+
+		>* {
+			position: absolute;
+			inset: 0;
+		}
+
+		.layer>* {
+			position: absolute;
+			pointer-events: auto;
+		}
+	}
+}
+
+#cursor {
+	position: absolute;
+	pointer-events: none;
+
+	&.text,
+	&.pin {
+		opacity: 0.5;
+	}
+}

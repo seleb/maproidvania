@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="src/assets/icon.png" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+  <meta name="theme-color" content="#000000">
+  <title>%TITLE%</title>
+  <link rel="stylesheet" href="./src/style.scss" />
+
+  <!-- GENERAL SEARCH INFO -->
+  <meta name="author" content="Sean S. LeBlanc" />
+  <meta name="copyright" content="Sean S. LeBlanc" />
+  <meta name="description" content="%DESCRIPTION%" />
+  <link rel="canonical" href="https://seleb.github.io/mastodon-archive-search" />
+
+  <!-- OPENGRAPH TAGS -->
+  <meta property="og:title" content="%TITLE%" />
+  <meta property="og:site_name" content="%TITLE%" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://seleb.github.io/mastodon-archive-search" />
+
+  <!-- TWITTER CARD -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:creator" content="@SeanSLeBlanc">
+  <meta name="twitter:title" content="%TITLE%" />
+  <meta name="twitter:description" content="%DESCRIPTION%" />
+  <meta name="twitter:image"
+    content="https://raw.githubusercontent.com/seleb/mastodon-archive-search/main/src/assets/icon.png" />
+</head>
+
+<body>
+  <script type="module" src="/src/index.ts"></script>
+  <div id="preloader" aria-busy="true"
+    style="display: flex; height: 100%; align-items: center; justify-content: center; text-align: center;">
+    Loading...
+    <noscript>You must enable javascript to use this app.</noscript>
+  </div>
+  <main>
+    <div id="about">
+      <h1>%TITLE%</h1>
+      <p>%DESCRIPTION%</p>
+      <div>
+        <span><a href="https://github.com/seleb/mastodon-archive-search/blob/main/CHANGELOG.md" target="_blank"
+            rel="noopener noreferrer">v%VERSION%</a></span>
+        <span><a href="https://github.com/seleb/mastodon-archive-search" target="_blank"
+            rel="noopener noreferrer">source</a></span>
+        <span>made by <a href="https://seans.site" target="_blank" rel="noopener noreferrer">sean</a></span>
+      </div>
+    </div>
+    <button id="btn-about" title="about">?</button>
+
+    <form id="controls">
+      <input type="search" placeholder="Search..." />
+
+      <label>select <input id="btn-select" type="radio" name="tool" title="select" value="select" /></label>
+      <label>pan <input id="btn-pan" type="radio" name="tool" title="pan" value="pan" /></label>
+      <label>text <input id="btn-text" type="radio" name="tool" title="text" value="text" /></label>
+
+      <div id="options-colour">
+        <input type="radio" name="tool" value="#FF0000" title="red" />
+        <input type="radio" name="tool" value="#FF9900" title="orange" />
+        <input type="radio" name="tool" value="#FFFF00" title="yellow" />
+        <input type="radio" name="tool" value="#00FF99" title="green" />
+        <input type="radio" name="tool" value="#00FFFF" title="cyan" />
+        <input type="radio" name="tool" value="#0000FF" title="blue" />
+        <input type="radio" name="tool" value="#FF00FF" title="pink" />
+        <input type="radio" name="tool" value="#FFFFFF" title="white" />
+        <input type="radio" name="tool" value="#000000" title="black" />
+      </div>
+
+      <div id="options-pin">
+        <label><input type="radio" name="tool" title="pin" value="📌" /></label>
+        <label><input type="radio" name="tool" title="star" value="⭐" /></label>
+        <label><input type="radio" name="tool" title="lock" value="🔒" /></label>
+        <label><input type="radio" name="tool" title="unlock" value="🔓" /></label>
+        <label><input type="radio" name="tool" title="gift" value="🎁" /></label>
+        <label><input type="radio" name="tool" title="key" value="🔑" /></label>
+        <label><input type="radio" name="tool" title="money" value="💰" /></label>
+        <label><input type="radio" name="tool" title="zap" value="⚡" /></label>
+        <label><input type="radio" name="tool" title="heart" value="💖" /></label>
+        <label><input type="radio" name="tool" title="?" value="❓" /></label>
+        <label><input type="radio" name="tool" title="!" value="❗" /></label>
+        <label><input type="radio" name="tool" title="x" value="❌" /></label>
+        <label><input type="radio" name="tool" title="check" value="✅" /></label>
+        <label><input type="radio" name="tool" title="cyclone" value="🌀" /></label>
+      </div>
+    </form>
+
+    <div id="map-container">
+      <div id="map">
+        <div class="layer" id="images"></div>
+        <div class="layer" id="drawings"></div>
+        <div class="layer" id="pins"></div>
+        <div class="layer" id="text"></div>
+      </div>
+      <div id="cursor"></div>
+    </div>
+  </main>
+</body>
+
+</html>
