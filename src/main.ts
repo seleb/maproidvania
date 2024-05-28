@@ -49,7 +49,7 @@
 		i.parentElement?.appendChild(span);
 	});
 
-	let tool = '';
+	let tool = 'select';
 	let toolOption = '';
 
 	btnColours.forEach((i) => {
