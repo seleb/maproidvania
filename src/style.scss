@@ -239,7 +239,7 @@ section {
 		.layer>* {
 			position: absolute;
 			pointer-events: auto;
-			transform-origin: 0% 0%;
+			transform-origin: 50% 50%;
 		}
 	}
 }
@@ -251,5 +251,9 @@ section {
 	&.text,
 	&.pin {
 		opacity: 0.5;
+	}
+
+	&.pin {
+		transform: translate(-50%, -50%);
 	}
 }

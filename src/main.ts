@@ -121,7 +121,7 @@
 		divMapContainer.style.backgroundPositionY = `${-offset.y}px`;
 		divMap.style.transform = `translate(${-offset.x}px, ${-offset.y}px) scale(${zoomEffective})`;
 		document.querySelectorAll<HTMLDivElement>('#pins > *').forEach((i) => {
-			i.style.transform = `scale(${1 / zoomEffective})`;
+			i.style.transform = `translate(-50%, -50%) scale(${1 / zoomEffective})`;
 		});
 	};
 
@@ -188,8 +188,8 @@
 
 	// sync mouse
 	divMapContainer.addEventListener('pointermove', (event) => {
-		divCursor.style.left = `${event.pageX - divCursor.clientWidth / 2}px`;
-		divCursor.style.top = `${event.pageY - divCursor.clientHeight / 2}px`;
+		divCursor.style.left = `${event.pageX}px`;
+		divCursor.style.top = `${event.pageY}px`;
 	});
 
 	const addImage = (img: string) => {
