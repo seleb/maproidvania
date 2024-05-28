@@ -250,7 +250,17 @@
 	// zoom in/out
 	divMapContainer.addEventListener('wheel', (event) => {
 		zoom -= Math.sign(event.deltaY);
-		zoomEffective = Math.pow(2, zoom);
+		const zoomEffectiveOld = zoomEffective;
+		zoomEffective = Math.pow(1.1, zoom);
+
+		const zoomEffectiveChange = zoomEffective - zoomEffectiveOld;
+		const mouse = getPosMouseScreen();
+		const zoomPoint = {
+			x: (mouse.x + offset.x) / zoomEffectiveOld,
+			y: (mouse.y + offset.y) / zoomEffectiveOld,
+		};
+		offset.x += zoomPoint.x * zoomEffectiveChange;
+		offset.y += zoomPoint.y * zoomEffectiveChange;
 		updateMap();
 	});
 
