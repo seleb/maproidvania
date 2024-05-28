@@ -1,4 +1,6 @@
 (async () => {
+	const bgGridSize = 256;
+
 	const formControls = document.querySelector<HTMLFormElement>('#controls');
 	const divMapContainer =
 		document.querySelector<HTMLDivElement>('#map-container');
