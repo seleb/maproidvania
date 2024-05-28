@@ -253,4 +253,6 @@
 		zoomEffective = Math.pow(2, zoom);
 		updateMap();
 	});
+
+	updateMap();
 })();
