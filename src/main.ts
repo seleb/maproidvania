@@ -104,20 +104,20 @@
 
 	let zoom = 0;
 	let zoomEffective = 1;
-	const offset = { x: 0, y: 0 };
+	const offset = { x: -window.innerWidth / 2, y: -window.innerHeight / 2 };
 
 	const updateMap = () => {
 		divMapContainer.style.backgroundSize = `${64 * zoomEffective}px`;
-		divMapContainer.style.backgroundPositionX = `${offset.x}px`;
-		divMapContainer.style.backgroundPositionY = `${offset.y}px`;
-		divMap.style.transform = `translate(${offset.x}px, ${offset.y}px) scale(${zoomEffective})`;
+		divMapContainer.style.backgroundPositionX = `${-offset.x}px`;
+		divMapContainer.style.backgroundPositionY = `${-offset.y}px`;
+		divMap.style.transform = `translate(${-offset.x}px, ${-offset.y}px) scale(${zoomEffective})`;
 		document.querySelectorAll<HTMLDivElement>('.layer > *').forEach((i) => {
 			i.style.transform = `scale(${1 / zoomEffective})`;
 		});
 	};
 
 	const getPos = (x: number, y: number) => {
-		return { x: x - offset.x, y: y - offset.y };
+		return { x: x + offset.x, y: y + offset.y };
 	};
 	const getPosMouse = () => {
 		return getPos(
@@ -133,8 +133,8 @@
 		offset.y = event.pageY;
 		divMapContainer.style.cursor = 'grabbing';
 		const drag = (event: PointerEvent) => {
-			offset.x = event.pageX - start.x + current.x;
-			offset.y = event.pageY - start.y + current.y;
+			offset.x = -(event.pageX - start.x) + current.x;
+			offset.y = -(event.pageY - start.y) + current.y;
 			updateMap();
 		};
 		const stopDragging = () => {
