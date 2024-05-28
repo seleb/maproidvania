@@ -241,6 +241,12 @@
 		});
 	});
 
+	const focus = (x: number, y: number) => {
+		offset.x = x - window.innerWidth / 2 / zoomEffective;
+		offset.y = y - window.innerHeight / 2 / zoomEffective;
+		updateMap();
+	};
+
 	// zoom in/out
 	divMapContainer.addEventListener('wheel', (event) => {
 		zoom -= Math.sign(event.deltaY);
