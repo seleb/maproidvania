@@ -102,7 +102,20 @@
 		window.addEventListener('pointerup', stopDrawing, { once: true });
 	};
 
+	let zoom = 0;
+	let zoomEffective = 1;
 	const offset = { x: 0, y: 0 };
+
+	const updateMap = () => {
+		divMapContainer.style.backgroundSize = `${64 * zoomEffective}px`;
+		divMapContainer.style.backgroundPositionX = `${offset.x}px`;
+		divMapContainer.style.backgroundPositionY = `${offset.y}px`;
+		divMap.style.transform = `translate(${offset.x}px, ${offset.y}px) scale(${zoomEffective})`;
+		document.querySelectorAll<HTMLDivElement>('.layer > *').forEach((i) => {
+			i.style.transform = `scale(${1 / zoomEffective})`;
+		});
+	};
+
 	const getPos = (x: number, y: number) => {
 		return { x: x - offset.x, y: y - offset.y };
 	};
@@ -122,9 +135,7 @@
 		const drag = (event: PointerEvent) => {
 			offset.x = event.pageX - start.x + current.x;
 			offset.y = event.pageY - start.y + current.y;
-			divMapContainer.style.backgroundPositionX = `${offset.x}px`;
-			divMapContainer.style.backgroundPositionY = `${offset.y}px`;
-			divMap.style.transform = `translate(${offset.x}px, ${offset.y}px)`;
+			updateMap();
 		};
 		const stopDragging = () => {
 			window.removeEventListener('pointermove', drag);
@@ -144,9 +155,10 @@
 			const elPin = document.createElement('div');
 			elPin.textContent = pin;
 			const p = getPosMouse();
-			elPin.style.top = `${p.y}px`;
-			elPin.style.left = `${p.x}px`;
+			elPin.style.top = `${p.y / zoomEffective}px`;
+			elPin.style.left = `${p.x / zoomEffective}px`;
 			layerPins.appendChild(elPin);
+			updateMap();
 		} else if (tool === 'colour') {
 			const colour = toolOption;
 			startDrawing(colour);
@@ -154,13 +166,14 @@
 			const elText = document.createElement('textarea');
 			elText.placeholder = 'Type here...';
 			layerText.appendChild(elText);
+			updateMap();
 		}
 	});
 
 	// sync mouse
 	divMapContainer.addEventListener('pointermove', (event) => {
-		divCursor.style.left = `${event.pageX}px`;
-		divCursor.style.top = `${event.pageY}px`;
+		divCursor.style.left = `${event.pageX - divCursor.clientWidth / 2}px`;
+		divCursor.style.top = `${event.pageY - divCursor.clientHeight / 2}px`;
 	});
 
 	const addImage = (img: string) => {
@@ -210,5 +223,12 @@
 				)
 				?.click();
 		});
+	});
+
+	// zoom in/out
+	divMapContainer.addEventListener('wheel', (event) => {
+		zoom -= Math.sign(event.deltaY);
+		zoomEffective = Math.pow(2, zoom);
+		updateMap();
 	});
 })();

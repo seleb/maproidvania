@@ -229,6 +229,7 @@ section {
 		position: absolute;
 		inset: 0;
 		user-select: none;
+		transform-origin: 0% 0%;
 
 		>* {
 			position: absolute;
@@ -238,6 +239,7 @@ section {
 		.layer>* {
 			position: absolute;
 			pointer-events: auto;
+			transform-origin: 0% 0%;
 		}
 	}
 }
