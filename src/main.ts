@@ -128,11 +128,18 @@
 	const getPos = (x: number, y: number) => {
 		return { x: x + offset.x, y: y + offset.y };
 	};
-	const getPosMouse = () => {
-		return getPos(
-			parseFloat(divCursor.style.left),
-			parseFloat(divCursor.style.top)
-		);
+	const getPosMouseScreen = () => {
+		return {
+			x: parseFloat(divCursor.style.left),
+			y: parseFloat(divCursor.style.top),
+		};
+	};
+	const getPosMouseMap = () => {
+		const p = getPosMouseScreen();
+		const p2 = getPos(p.x, p.y);
+		p2.x /= zoomEffective;
+		p2.y /= zoomEffective;
+		return p2;
 	};
 
 	const startDragging = (event: PointerEvent) => {
@@ -163,9 +170,9 @@
 			const pin = toolOption;
 			const elPin = document.createElement('div');
 			elPin.textContent = pin;
-			const p = getPosMouse();
-			elPin.style.top = `${p.y / zoomEffective}px`;
-			elPin.style.left = `${p.x / zoomEffective}px`;
+			const p = getPosMouseMap();
+			elPin.style.top = `${p.y}px`;
+			elPin.style.left = `${p.x}px`;
 			layerPins.appendChild(elPin);
 			updateMap();
 		} else if (tool === 'colour') {
