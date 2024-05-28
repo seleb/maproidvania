@@ -118,7 +118,7 @@
 		divMapContainer.style.backgroundPositionX = `${-offset.x}px`;
 		divMapContainer.style.backgroundPositionY = `${-offset.y}px`;
 		divMap.style.transform = `translate(${-offset.x}px, ${-offset.y}px) scale(${zoomEffective})`;
-		document.querySelectorAll<HTMLDivElement>('.layer > *').forEach((i) => {
+		document.querySelectorAll<HTMLDivElement>('#pins > *').forEach((i) => {
 			i.style.transform = `scale(${1 / zoomEffective})`;
 		});
 	};
