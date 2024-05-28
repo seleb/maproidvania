@@ -107,7 +107,14 @@
 	const offset = { x: -window.innerWidth / 2, y: -window.innerHeight / 2 };
 
 	const updateMap = () => {
-		divMapContainer.style.backgroundSize = `${64 * zoomEffective}px`;
+		let z = zoomEffective;
+		while (z > 4) {
+			z /= 2;
+		}
+		while (z < 1) {
+			z *= 2;
+		}
+		divMapContainer.style.backgroundSize = `${bgGridSize * z}px`;
 		divMapContainer.style.backgroundPositionX = `${-offset.x}px`;
 		divMapContainer.style.backgroundPositionY = `${-offset.y}px`;
 		divMap.style.transform = `translate(${-offset.x}px, ${-offset.y}px) scale(${zoomEffective})`;
