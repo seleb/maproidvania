@@ -194,7 +194,7 @@
 
 			const btnDelete = document.createElement('button');
 			btnDelete.title = 'delete';
-			btnDelete.textContent = '␡';
+			btnDelete.textContent = '✖';
 			btnDelete.addEventListener('click', () => {
 				elLi.remove();
 				el.dataset.images = Array.from(ulImages.querySelectorAll('img'))
