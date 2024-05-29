@@ -52,7 +52,12 @@
     <button id="btn-about" title="about">?</button>
 
     <form id="controls">
-      <input type="search" placeholder="Search..." />
+      <div id="options-areas">
+        <select id="areas"></select>
+        <button type="button" id="btn-area-add" title="add area">➕</button>
+        <button type="button" id="btn-area-rename" title="rename area">🖋</button>
+        <button type="button" id="btn-area-delete" title="delete area">✖</button>
+      </div>
 
       <div id="options-tools">
         <label title="select">🡴 <input id="btn-select" type="radio" name="tool" title="select" value="select"
@@ -89,6 +94,8 @@
         <label><input type="radio" name="tool" title="check" value="✅" /></label>
         <label><input type="radio" name="tool" title="cyclone" value="🌀" /></label>
       </div>
+
+      <input type="search" placeholder="Search..." />
     </form>
 
     <div id="map-container">

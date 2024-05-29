@@ -12,6 +12,12 @@
 	const divCursor = document.querySelector<HTMLDivElement>('#cursor');
 	const btnAboutToggle =
 		document.querySelector<HTMLButtonElement>('#btn-about');
+	const selectAreas = document.querySelector<HTMLSelectElement>('#areas');
+	const btnAreaAdd = document.querySelector<HTMLButtonElement>('#btn-area-add');
+	const btnAreaRename =
+		document.querySelector<HTMLButtonElement>('#btn-area-rename');
+	const btnAreaDelete =
+		document.querySelector<HTMLButtonElement>('#btn-area-delete');
 	const btnSelect = document.querySelector<HTMLInputElement>('#btn-select');
 	const btnPan = document.querySelector<HTMLInputElement>('#btn-pan');
 	const btnText = document.querySelector<HTMLInputElement>('#btn-text');
@@ -40,6 +46,10 @@
 		!btnPan ||
 		!btnText ||
 		!btnAboutToggle ||
+		!selectAreas ||
+		!btnAreaAdd ||
+		!btnAreaRename ||
+		!btnAreaDelete ||
 		!btnColours.length ||
 		!btnPins.length ||
 		!divContext ||
@@ -52,6 +62,25 @@
 
 	btnAboutToggle.addEventListener('click', () => {
 		divAbout.classList.toggle('show');
+	});
+
+	selectAreas.addEventListener('change', () => {
+		// TODO: change area
+	});
+	btnAreaAdd.addEventListener('click', () => {
+		const key = window.prompt('new area name?', 'area #');
+		if (!key) return;
+		// TODO: create new area
+	});
+	btnAreaRename.addEventListener('click', () => {
+		const key = window.prompt('rename area', 'TODO: current name');
+		if (!key) return;
+		// TODO: rename new area
+	});
+	btnAreaDelete.addEventListener('click', () => {
+		if ('TODO: last area check') window.alert('cannot delete only area');
+		if (!window.confirm('delete area?')) return;
+		// TODO: delete area
 	});
 
 	btnColours.forEach((i) => {
