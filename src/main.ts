@@ -20,6 +20,7 @@ import { save } from './save';
 	const divMapContainer =
 		document.querySelector<HTMLDivElement>('#map-container');
 	const divMap = document.querySelector<HTMLDivElement>('#map');
+	const layerImages = document.querySelector<HTMLDivElement>('#images');
 	const layerDrawings = document.querySelector<HTMLDivElement>('#drawings');
 	const layerPins = document.querySelector<HTMLDivElement>('#pins');
 	const layerText = document.querySelector<HTMLDivElement>('#text');
@@ -55,6 +56,7 @@ import { save } from './save';
 		!divControls ||
 		!divMapContainer ||
 		!divMap ||
+		!layerImages ||
 		!layerDrawings ||
 		!layerPins ||
 		!layerText ||
