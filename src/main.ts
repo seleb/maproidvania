@@ -188,6 +188,7 @@
 		const start = { x: event.pageX, y: event.pageY };
 		offset.x = event.pageX;
 		offset.y = event.pageY;
+		const cursorOld = divMapContainer.style.cursor;
 		divMapContainer.style.cursor = 'grabbing';
 		const drag = (event: PointerEvent) => {
 			offset.x = -(event.pageX - start.x) + current.x;
@@ -196,7 +197,7 @@
 		};
 		const stopDragging = () => {
 			window.removeEventListener('pointermove', drag);
-			divMapContainer.style.cursor = 'grab';
+			divMapContainer.style.cursor = cursorOld;
 		};
 		window.addEventListener('pointermove', drag);
 		window.addEventListener('pointerup', stopDragging, { once: true });
@@ -285,6 +286,10 @@
 
 	divMapContainer.addEventListener('pointerdown', (event) => {
 		event.preventDefault();
+		if (event.button === 1) {
+			startDragging(event);
+			return;
+		}
 		if (tool === 'select') {
 			contextDeselect();
 			const element = document.elementFromPoint(
