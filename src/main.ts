@@ -1,4 +1,5 @@
 import { get, set } from './Storage';
+import { load } from './load';
 import { onPasteImage } from './onPaste';
 import { save } from './save';
 
@@ -175,33 +176,18 @@ import { save } from './save';
 		const data = JSON.stringify({ current, areas }, undefined, '\t');
 		save(data);
 	});
-	btnImport.addEventListener('click', () => {
-		const input = document.createElement('input');
-		input.type = 'file';
-
-		input.onchange = () => {
-			const file = input.files?.[0];
-			if (!file) return;
-
-			// setting up the reader
-			const reader = new FileReader();
-			reader.readAsText(file, 'UTF-8');
-
-			reader.onload = () => {
-				const content = JSON.parse(reader.result?.toString() || '');
-				if (
-					typeof content.current !== 'string' ||
-					typeof content.areas !== 'object'
-				)
-					throw new Error('invalid file');
-				current = content.current;
-				areas = content.areas;
-				area = areas[current];
-				loadArea();
-			};
-		};
-
-		input.click();
+	btnImport.addEventListener('click', async () => {
+		const data = await load();
+		const content = JSON.parse(data);
+		if (
+			typeof content.current !== 'string' ||
+			typeof content.areas !== 'object'
+		)
+			throw new Error('invalid file');
+		current = content.current;
+		areas = content.areas;
+		area = areas[current];
+		loadArea();
 	});
 
 	btnColours.forEach((i) => {
