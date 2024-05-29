@@ -157,6 +157,7 @@ section {
 	}
 
 
+	#options-tools,
 	#options-colour,
 	#options-pin {
 		display: flex;
@@ -206,6 +207,7 @@ section {
 		}
 	}
 
+	#options-tools,
 	#options-pin {
 		font-size: 110%;
 
@@ -216,6 +218,14 @@ section {
 		>* {
 			background-color: var(--light);
 		}
+	}
+
+	#options-tools>* {
+		background-color: var(--darker);
+	}
+
+	#options-pin>* {
+		background-color: var(--light);
 	}
 }
 

@@ -54,9 +54,12 @@
     <form id="controls">
       <input type="search" placeholder="Search..." />
 
-      <label>select <input id="btn-select" type="radio" name="tool" title="select" value="select" checked /></label>
-      <label>pan <input id="btn-pan" type="radio" name="tool" title="pan" value="pan" /></label>
-      <label>text <input id="btn-text" type="radio" name="tool" title="text" value="text" /></label>
+      <div id="options-tools">
+        <label title="select">🡴 <input id="btn-select" type="radio" name="tool" title="select" value="select"
+            checked /></label>
+        <label title="pan">🖐 <input id="btn-pan" type="radio" name="tool" value="pan" /></label>
+        <label title="text">ꕯ <input id="btn-text" type="radio" name="tool" value="text" /></label>
+      </div>
 
       <div id="options-colour">
         <input type="radio" name="tool" value="#FF0000" title="red" />
