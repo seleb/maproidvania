@@ -189,6 +189,7 @@
 		if (!imgs.length) {
 			const elLi = document.createElement('li');
 			elLi.textContent = 'paste to add image';
+			elLi.className = 'null';
 			ulImages.appendChild(elLi);
 		}
 	};
