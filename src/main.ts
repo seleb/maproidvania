@@ -3,6 +3,12 @@ import { get, set } from './Storage';
 (async () => {
 	let current = get('current');
 	const areas = get('areas');
+	let area = areas[current];
+
+	let zoomEffective = 1;
+	const updateZoomEffective = () => {
+		zoomEffective = Math.pow(1.1, area.zoom);
+	};
 
 	const bgGridSize = 256;
 
@@ -79,7 +85,10 @@ import { get, set } from './Storage';
 	selectAreas.addEventListener('change', () => {
 		current = selectAreas.value;
 		set('current', current);
+		area = areas[current];
 		// TODO: change displayed area
+		updateZoomEffective();
+		updateMap();
 	});
 	btnAreaAdd.addEventListener('click', () => {
 		const key = window.prompt(
@@ -195,10 +204,6 @@ import { get, set } from './Storage';
 		window.addEventListener('pointerup', stopDrawing, { once: true });
 	};
 
-	let zoom = 0;
-	let zoomEffective = 1;
-	const offset = { x: -window.innerWidth / 2, y: -window.innerHeight / 2 };
-
 	const updateMap = () => {
 		let z = zoomEffective;
 		while (z > 4) {
@@ -208,16 +213,17 @@ import { get, set } from './Storage';
 			z *= 2;
 		}
 		divMapContainer.style.backgroundSize = `${bgGridSize * z}px`;
-		divMapContainer.style.backgroundPositionX = `${-offset.x}px`;
-		divMapContainer.style.backgroundPositionY = `${-offset.y}px`;
-		divMap.style.transform = `translate(${-offset.x}px, ${-offset.y}px) scale(${zoomEffective})`;
+		divMapContainer.style.backgroundPositionX = `${-area.offset.x}px`;
+		divMapContainer.style.backgroundPositionY = `${-area.offset.y}px`;
+		divMap.style.transform = `translate(${-area.offset.x}px, ${-area.offset
+			.y}px) scale(${zoomEffective})`;
 		document.querySelectorAll<HTMLDivElement>('#pins > *').forEach((i) => {
 			i.style.transform = `translate(-50%, -50%) scale(${1 / zoomEffective})`;
 		});
 	};
 
 	const getPos = (x: number, y: number) => {
-		return { x: x + offset.x, y: y + offset.y };
+		return { x: x + area.offset.x, y: y + area.offset.y };
 	};
 	const getPosMouseScreen = () => {
 		return {
@@ -234,15 +240,15 @@ import { get, set } from './Storage';
 	};
 
 	const startDragging = (event: PointerEvent) => {
-		const current = { ...offset };
+		const current = { ...area.offset };
 		const start = { x: event.pageX, y: event.pageY };
-		offset.x = event.pageX;
-		offset.y = event.pageY;
+		area.offset.x = event.pageX;
+		area.offset.y = event.pageY;
 		const cursorOld = divMapContainer.style.cursor;
 		divMapContainer.style.cursor = 'grabbing';
 		const drag = (event: PointerEvent) => {
-			offset.x = -(event.pageX - start.x) + current.x;
-			offset.y = -(event.pageY - start.y) + current.y;
+			area.offset.x = -(event.pageX - start.x) + current.x;
+			area.offset.y = -(event.pageY - start.y) + current.y;
 			updateMap();
 		};
 		const stopDragging = () => {
@@ -444,29 +450,30 @@ import { get, set } from './Storage';
 	});
 
 	const focus = (x: number, y: number) => {
-		offset.x = x - window.innerWidth / 2 / zoomEffective;
-		offset.y = y - window.innerHeight / 2 / zoomEffective;
+		area.offset.x = x - window.innerWidth / 2 / zoomEffective;
+		area.offset.y = y - window.innerHeight / 2 / zoomEffective;
 		updateMap();
 	};
 
 	// zoom in/out
 	divMapContainer.addEventListener('wheel', (event) => {
-		offset.x += event.deltaX;
+		area.offset.x += event.deltaX;
 
-		zoom -= Math.sign(event.deltaY);
+		area.zoom -= Math.sign(event.deltaY);
 		const zoomEffectiveOld = zoomEffective;
-		zoomEffective = Math.pow(1.1, zoom);
+		updateZoomEffective();
 
 		const zoomEffectiveChange = zoomEffective - zoomEffectiveOld;
 		const mouse = getPosMouseScreen();
 		const zoomPoint = {
-			x: (mouse.x + offset.x) / zoomEffectiveOld,
-			y: (mouse.y + offset.y) / zoomEffectiveOld,
+			x: (mouse.x + area.offset.x) / zoomEffectiveOld,
+			y: (mouse.y + area.offset.y) / zoomEffectiveOld,
 		};
-		offset.x += zoomPoint.x * zoomEffectiveChange;
-		offset.y += zoomPoint.y * zoomEffectiveChange;
+		area.offset.x += zoomPoint.x * zoomEffectiveChange;
+		area.offset.y += zoomPoint.y * zoomEffectiveChange;
 		updateMap();
 	});
 
+	updateZoomEffective();
 	updateMap();
 })();
