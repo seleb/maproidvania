@@ -428,25 +428,31 @@ import { get, set } from './Storage';
 		}
 	});
 
-	// hold space to pan
 	let panning = false;
 	window.addEventListener('keydown', (event) => {
-		if (panning) return;
-		if (event.key !== ' ') return;
+		// ctrl+s to save
+		if (event.ctrlKey && event.key === 's') {
+			event.preventDefault();
+			set('areas', areas);
+			return;
+		}
 
-		panning = true;
-		const oldTool = tool;
-		const oldToolOption = toolOption;
-		btnPan.click();
-		window.addEventListener('keyup', (event) => {
-			if (event.key !== ' ') return;
-			panning = false;
-			document
-				.querySelector<HTMLInputElement>(
-					`input[name="tool"][value="${oldToolOption}"], input[name="tool"][value="${oldTool}"]`
-				)
-				?.click();
-		});
+		// hold space to pan
+		if (!panning && event.key === ' ') {
+			panning = true;
+			const oldTool = tool;
+			const oldToolOption = toolOption;
+			btnPan.click();
+			window.addEventListener('keyup', (event) => {
+				if (event.key !== ' ') return;
+				panning = false;
+				document
+					.querySelector<HTMLInputElement>(
+						`input[name="tool"][value="${oldToolOption}"], input[name="tool"][value="${oldTool}"]`
+					)
+					?.click();
+			});
+		}
 	});
 
 	const focus = (x: number, y: number) => {
