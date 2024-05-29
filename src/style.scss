@@ -245,7 +245,7 @@ section {
 			transform-origin: 50% 50%;
 
 			&.selected {
-				outline: solid 4px red;
+				filter: drop-shadow(0 0 0.1rem var(--light)) #{"invert()"};
 			}
 		}
 	}
@@ -269,6 +269,8 @@ section {
 	position: absolute;
 	background-color: var(--dark-t);
 	width: 30rem;
+	max-width: 50%;
+	max-height: 50%;
 	display: flex;
 	flex-direction: column;
 	border-radius: 0.25rem;
@@ -287,5 +289,14 @@ section {
 		>* {
 			flex: auto;
 		}
+	}
+
+	#context-images {
+		overflow: auto;
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: flex;
+		gap: 0.5rem;
 	}
 }

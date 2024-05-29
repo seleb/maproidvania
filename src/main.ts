@@ -24,7 +24,7 @@
 	const btnMove = document.querySelector<HTMLButtonElement>('#context-move');
 	const btnDelete =
 		document.querySelector<HTMLButtonElement>('#context-delete');
-	const btnNotes =
+	const textareaNotes =
 		document.querySelector<HTMLTextAreaElement>('#context-notes');
 	const ulImages = document.querySelector<HTMLUListElement>('#context-images');
 	if (
@@ -45,7 +45,7 @@
 		!divContext ||
 		!btnMove ||
 		!btnDelete ||
-		!btnNotes ||
+		!textareaNotes ||
 		!ulImages
 	)
 		throw new Error('Could not find elements');
@@ -174,6 +174,24 @@
 	};
 
 	let selected: HTMLElement | null = null;
+	const updateContextImages = () => {
+		if (!selected) return;
+		ulImages.textContent = '';
+		const imgs = selected.dataset.images?.split('|') || [];
+		imgs.forEach((i) => {
+			const elImg = document.createElement('img');
+			elImg.src = i;
+			elImg.draggable = false;
+			const elLi = document.createElement('li');
+			elLi.appendChild(elImg);
+			ulImages.appendChild(elLi);
+		});
+		if (!imgs.length) {
+			const elLi = document.createElement('li');
+			elLi.textContent = 'paste to add image';
+			ulImages.appendChild(elLi);
+		}
+	};
 	const contextSelect = (el: HTMLElement) => {
 		selected = el;
 		divContext.classList.add('show');
@@ -189,12 +207,15 @@
 				: r.left - divContext.clientWidth
 		}px`;
 		selected.classList.add('selected');
+		textareaNotes.value = selected.dataset.notes || '';
+		updateContextImages();
 	};
 	const contextDeselect = () => {
 		divContext.classList.remove('show');
 		selected?.classList.remove('selected');
 		selected = null;
 	};
+
 	btnMove.addEventListener('click', () => {
 		window.alert('TODO: implement');
 	});
@@ -203,6 +224,10 @@
 		const el = selected;
 		contextDeselect();
 		el.remove();
+	});
+	textareaNotes.addEventListener('input', () => {
+		if (!selected) return;
+		selected.dataset.notes = textareaNotes.value;
 	});
 
 	divMapContainer.addEventListener('pointerdown', (event) => {
@@ -245,6 +270,22 @@
 		divCursor.style.top = `${event.pageY}px`;
 	});
 
+	const onPasteImage = (img: string) => {
+		if (selected) {
+			addImageNote(img);
+		} else {
+			addImage(img);
+		}
+	};
+
+	const addImageNote = (img: string) => {
+		if (!selected) return;
+		selected.dataset.images = [selected.dataset.images, img]
+			.filter((i) => i)
+			.join('|');
+		updateContextImages();
+	};
+
 	const addImage = (img: string) => {
 		const elImg = document.createElement('img');
 		elImg.src = img;
@@ -266,7 +307,7 @@
 				const reader = new FileReader();
 				reader.onload = () => {
 					const result = reader.result as string | null;
-					if (result?.startsWith('data:image')) addImage(result);
+					if (result?.startsWith('data:image')) onPasteImage(result);
 				};
 				reader.readAsDataURL(blob);
 			}
