@@ -11,6 +11,7 @@
 	--darker: #04020f;
 	--dark: #3c1b26;
 	--dark-t: #{fade-out(#3c1b26, 0.25)};
+	--darker-t: #{fade-out(#04020f, 0.25)};
 	--light: #b9a58d;
 	--lighter: #e5f3fc;
 	font-family: "Bitch", "Comic Sans MS", sans-serif;
@@ -38,6 +39,7 @@ label {
 
 input[type="search"],
 input[type="text"],
+input[type="number"],
 textarea,
 select {
 	font-family: inherit;
@@ -240,17 +242,21 @@ section {
 			display: none;
 		}
 
-		>* {
+		>input {
 			background-color: var(--light);
 		}
 	}
 
-	#options-tools>* {
+	#options-tools>label {
 		background-color: var(--darker);
 	}
 
 	#options-pin>* {
 		background-color: var(--light);
+	}
+
+	#btn-grid {
+		font-size: 130%;
 	}
 }
 
@@ -278,9 +284,35 @@ section {
 			position: absolute;
 			pointer-events: auto;
 			transform-origin: 50% 50%;
+		}
 
-			&.selected {
+		#pins {
+			>.selected {
 				filter: drop-shadow(0 0 0.1rem var(--light)) #{"invert()"};
+			}
+		}
+
+		#images {
+			>* {
+				background-color: var(--darker-t);
+				object-fit: none;
+				object-position: center;
+				image-rendering: pixelated;
+
+				&.selected {
+					filter: contrast(1.1);
+
+					&::after {
+						content: 'paste to add image';
+						display: flex;
+						position: absolute;
+						inset: 0;
+						text-align: center;
+						align-items: center;
+						justify-content: center;
+						font-size: 400%;
+					}
+				}
 			}
 		}
 	}

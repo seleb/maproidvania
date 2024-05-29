@@ -34,25 +34,27 @@ export type Text = {
 export type Area = {
 	offset: { x: number; y: number };
 	zoom: number;
-	images: Image[];
+	images: { [key: string]: string };
 	drawings: Drawing[];
 	pins: Pin[];
 	text: Text[];
 };
 
 type State = {
+	grid: [number, number];
 	current: string;
 	areas: {
 		[key: string]: Area;
 	};
 };
 const initialState: State = {
+	grid: [1920, 1080],
 	current: 'area 0',
 	areas: {
 		'area 0': {
 			offset: { x: 0, y: 0 },
 			zoom: 1,
-			images: [],
+			images: {},
 			drawings: [],
 			pins: [],
 			text: [],
@@ -61,6 +63,7 @@ const initialState: State = {
 };
 
 const internalState: State = {
+	grid: initialState.grid,
 	current: initialState.current,
 	areas: initialState.areas,
 };
@@ -68,6 +71,7 @@ const internalState: State = {
 export async function init() {
 	const saved = await storage.getItem<State>('storage');
 	if (saved) {
+		internalState.grid = saved.grid;
 		internalState.current = saved.current;
 		internalState.areas = saved.areas;
 	}
@@ -83,6 +87,7 @@ export function set<K extends keyof State, V extends State[K]>(k: K, v: V) {
 }
 
 export function reset() {
+	set('grid', initialState.grid);
 	set('current', initialState.current);
 	set('areas', initialState.areas);
 }

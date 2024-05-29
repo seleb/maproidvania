@@ -6,6 +6,7 @@ import { save } from './save';
 
 (async () => {
 	let current = get('current');
+	let grid = get('grid');
 	let areas = get('areas');
 	let area = areas[current];
 
@@ -13,8 +14,6 @@ import { save } from './save';
 	const updateZoomEffective = () => {
 		zoomEffective = Math.pow(1.1, area.zoom);
 	};
-
-	const bgGridSize = 256;
 
 	const divControls = document.querySelector<HTMLDivElement>('#controls');
 	const divMapContainer =
@@ -34,6 +33,7 @@ import { save } from './save';
 		document.querySelector<HTMLButtonElement>('#btn-area-rename');
 	const btnAreaDelete =
 		document.querySelector<HTMLButtonElement>('#btn-area-delete');
+	const btnGrid = document.querySelector<HTMLButtonElement>('#btn-grid');
 	const btnSave = document.querySelector<HTMLButtonElement>('#btn-save');
 	const btnExport = document.querySelector<HTMLButtonElement>('#btn-export');
 	const btnImport = document.querySelector<HTMLButtonElement>('#btn-import');
@@ -70,6 +70,7 @@ import { save } from './save';
 		!btnAreaAdd ||
 		!btnAreaRename ||
 		!btnAreaDelete ||
+		!btnGrid ||
 		!btnSave ||
 		!btnExport ||
 		!btnImport ||
@@ -107,6 +108,7 @@ import { save } from './save';
 		});
 
 		// display
+		updateGrid();
 		updateZoomEffective();
 		updateMap();
 	};
@@ -137,7 +139,7 @@ import { save } from './save';
 		areas[key] = {
 			offset: { x: 0, y: 0 },
 			zoom: 1,
-			images: [],
+			images: {},
 			drawings: [],
 			pins: [],
 			text: [],
@@ -167,6 +169,24 @@ import { save } from './save';
 		selectAreas.dispatchEvent(new Event('change'));
 	});
 
+	btnGrid.addEventListener('click', () => {
+		const warning =
+			'note: this is global and will misalign anything that has been already placed on the map';
+		const w = window.prompt(
+			`Set map cell width (${warning})`,
+			grid[0].toString(10)
+		);
+		if (!w) return;
+		const h = window.prompt(
+			`Set map cell height (${warning})`,
+			grid[1].toString(10)
+		);
+		if (!h) return;
+		grid[0] = parseInt(w, 10);
+		grid[1] = parseInt(h, 10);
+		updateGrid();
+	});
+
 	btnSave.addEventListener('click', () => {
 		set('grid', grid);
 		set('current', current);
@@ -174,7 +194,7 @@ import { save } from './save';
 	});
 	btnExport.addEventListener('click', async () => {
 		try {
-			const data = JSON.stringify({ current, areas }, undefined, '\t');
+			const data = JSON.stringify({ grid, current, areas }, undefined, '\t');
 			await save(data);
 		} catch (err) {
 			error(err);
@@ -270,7 +290,9 @@ import { save } from './save';
 		while (z < 1) {
 			z *= 2;
 		}
-		divMapContainer.style.backgroundSize = `${bgGridSize * z}px`;
+		divMapContainer.style.backgroundSize = `${(grid[0] * z) / 4}px ${
+			(grid[1] * z) / 4
+		}px`;
 		divMapContainer.style.backgroundPositionX = `${-area.offset.x}px`;
 		divMapContainer.style.backgroundPositionY = `${-area.offset.y}px`;
 		divMap.style.transform = `translate(${-area.offset.x}px, ${-area.offset
@@ -278,6 +300,36 @@ import { save } from './save';
 		document.querySelectorAll<HTMLDivElement>('#pins > *').forEach((i) => {
 			i.style.transform = `translate(-50%, -50%) scale(${1 / zoomEffective})`;
 		});
+	};
+
+	const updateGrid = () => {
+		layerImages.textContent = '';
+		const [minX, minY, maxX, maxY] = Object.keys(area.images).length
+			? Object.keys(area.images)
+					.map((i) => i.split('|').map((j) => parseInt(j, 10)))
+					.reduce(
+						([minX, minY, maxX, maxY], [x, y]) => [
+							Math.min(minX, x),
+							Math.min(minY, y),
+							Math.max(maxX, x),
+							Math.max(maxY, y),
+						],
+						[Infinity, Infinity, -Infinity, -Infinity]
+					)
+			: [0, 0, 0, 0];
+		for (let y = minY - 1; y <= maxY + 1; ++y) {
+			for (let x = minX - 1; x <= maxX + 1; ++x) {
+				const img = area.images[`${x}|${y}`];
+				const el = document.createElement(img ? 'img' : 'div');
+				el.src = img;
+				el.dataset.x = x.toString(10);
+				el.dataset.y = y.toString(10);
+				el.style.width = `${grid[0]}px`;
+				el.style.height = `${grid[1]}px`;
+				el.style.transform = `translate(${x * grid[0]}px, ${y * grid[1]}px)`;
+				layerImages.appendChild(el);
+			}
+		}
 	};
 
 	const getPos = (x: number, y: number) => {
@@ -318,6 +370,7 @@ import { save } from './save';
 	};
 
 	let selected: HTMLElement | null = null;
+	let selectedType = '';
 	const updateContextImages = () => {
 		const el = selected;
 		if (!el) return;
@@ -361,41 +414,46 @@ import { save } from './save';
 			ulImages.appendChild(elLi);
 		}
 	};
-	const contextSelect = (el: HTMLElement) => {
+	const contextSelect = (el: HTMLElement, type: string) => {
 		selected = el;
-		const pin = area.pins[parseInt(selected.dataset.idx || '', 10)];
-		divContext.classList.add('show');
-		const r = selected.getBoundingClientRect();
-		selected.classList.add('selected');
-		textareaNotes.value = pin.notes || '';
-		updateContextImages();
-		divContext.style.top = `${
-			r.bottom < divMapContainer.clientHeight / 2
-				? r.bottom
-				: r.top - divContext.clientHeight
-		}px`;
-		divContext.style.left = `${
-			r.right < divMapContainer.clientWidth / 2
-				? r.right
-				: r.left - divContext.clientWidth
-		}px`;
-		requestAnimationFrame(() => {
-			window.addEventListener(
-				'pointerdown',
-				(event) => {
-					if (
-						event.target &&
-						![divContext, selected].includes(event.target) &&
-						!(
-							divContext.contains(event.target) ||
-							!selected?.contains(event.target)
+		selectedType = type;
+		if (type === 'pin') {
+			const pin = area.pins[parseInt(selected.dataset.idx || '', 10)];
+			divContext.classList.add('show');
+			const r = selected.getBoundingClientRect();
+			selected.classList.add('selected');
+			textareaNotes.value = pin.notes || '';
+			updateContextImages();
+			divContext.style.top = `${
+				r.bottom < divMapContainer.clientHeight / 2
+					? r.bottom
+					: r.top - divContext.clientHeight
+			}px`;
+			divContext.style.left = `${
+				r.right < divMapContainer.clientWidth / 2
+					? r.right
+					: r.left - divContext.clientWidth
+			}px`;
+			requestAnimationFrame(() => {
+				window.addEventListener(
+					'pointerdown',
+					(event) => {
+						if (
+							event.target &&
+							![divContext, selected].includes(event.target) &&
+							!(
+								divContext.contains(event.target) ||
+								!selected?.contains(event.target)
+							)
 						)
-					)
-						contextDeselect();
-				},
-				{ once: true }
-			);
-		});
+							contextDeselect();
+					},
+					{ once: true }
+				);
+			});
+		} else if (type === 'image') {
+			selected.classList.add('selected');
+		}
 	};
 	const contextDeselect = () => {
 		divContext.classList.remove('show');
@@ -433,44 +491,58 @@ import { save } from './save';
 		if (event.button === 1) {
 			startDragging(event);
 			return;
-		}
-		if (tool === 'select') {
-			contextDeselect();
-			const element = document.elementFromPoint(
-				event.pageX,
-				event.pageY
-			) as HTMLElement | null;
-			if (!element?.closest('#pins')) {
+		} else if (event.button === 0) {
+			if (tool === 'select') {
+				contextDeselect();
+				const element = document.elementFromPoint(
+					event.pageX,
+					event.pageY
+				) as HTMLElement | null;
+				if (element?.closest('#pins')) {
+					contextSelect(element, 'pin');
+				} else if (element?.closest('#images')) {
+					contextSelect(element, 'image');
+				}
 				return;
+			} else if (tool === 'pan') {
+				startDragging(event);
+			} else if (tool === 'pin') {
+				const pin = toolOption;
+				const elPin = document.createElement('div');
+				elPin.textContent = pin;
+				const p = getPosMouseMap();
+				elPin.style.top = `${p.y}px`;
+				elPin.style.left = `${p.x}px`;
+				layerPins.appendChild(elPin);
+				elPin.dataset.idx = area.pins.length.toString(10);
+				area.pins.push({
+					x: p.x,
+					y: p.y,
+					type: toolOption,
+					notes: '',
+					images: '',
+				});
+				updateMap();
+			} else if (tool === 'colour') {
+				const colour = toolOption;
+				startDrawing(colour);
+			} else if (tool === 'text') {
+				const elText = document.createElement('textarea');
+				elText.placeholder = 'Type here...';
+				const p = getPosMouseMap();
+				elText.style.top = `${p.y}px`;
+				elText.style.left = `${p.x}px`;
+				layerText.appendChild(elText);
+				elText.dataset.idx = area.text.length.toString(10);
+				area.pins.push({
+					x: p.x,
+					y: p.y,
+					type: toolOption,
+					notes: '',
+					images: '',
+				});
+				updateMap();
 			}
-			contextSelect(element);
-		} else if (tool === 'pan') {
-			startDragging(event);
-		} else if (tool === 'pin') {
-			const pin = toolOption;
-			const elPin = document.createElement('div');
-			elPin.textContent = pin;
-			const p = getPosMouseMap();
-			elPin.style.top = `${p.y}px`;
-			elPin.style.left = `${p.x}px`;
-			layerPins.appendChild(elPin);
-			elPin.dataset.idx = area.pins.length.toString(10);
-			area.pins.push({
-				x: p.x,
-				y: p.y,
-				type: toolOption,
-				notes: '',
-				images: '',
-			});
-			updateMap();
-		} else if (tool === 'colour') {
-			const colour = toolOption;
-			startDrawing(colour);
-		} else if (tool === 'text') {
-			const elText = document.createElement('textarea');
-			elText.placeholder = 'Type here...';
-			layerText.appendChild(elText);
-			updateMap();
 		}
 	});
 
@@ -488,20 +560,17 @@ import { save } from './save';
 	};
 
 	const addImage = (img: string) => {
-		const elImg = document.createElement('img');
-		elImg.src = img;
-		elImg.draggable = false;
-		const p = getPos(0, 0);
-		elImg.style.top = `${p.y}px`;
-		elImg.style.left = `${p.x}px`;
-		layerDrawings.appendChild(elImg);
+		if (!selected) return;
+		const key = `${selected.dataset.x}|${selected.dataset.y}`;
+		area.images[key] = img;
+		updateGrid();
 	};
 
 	// paste to add image
 	onPasteImage((img: string) => {
-		if (selected) {
+		if (selected && selectedType === 'pin') {
 			addImageNote(img);
-		} else {
+		} else if (selected && selectedType === 'image') {
 			addImage(img);
 		}
 	});
@@ -519,6 +588,15 @@ import { save } from './save';
 		if (event.key === 'Escape') {
 			contextDeselect();
 		}
+		// delete image
+		if (
+			(event.key === 'Backspace' || event.key === 'Delete') &&
+			selected &&
+			selectedType === 'image'
+		) {
+			delete area.images[`${selected.dataset.x}|${selected.dataset.y}`];
+			updateGrid();
+		}
 		// delete pin
 		if (
 			(event.key === 'Backspace' || event.key === 'Delete') &&
@@ -533,14 +611,20 @@ import { save } from './save';
 			btnSave.click();
 			return;
 		}
+		// ctrl+c to copy image
+		if (
+			event.ctrlKey &&
+			event.key === 'c' &&
+			selected &&
+			selectedType === 'image'
+		) {
+			event.preventDefault();
+			navigator.clipboard.writeText((selected as HTMLImageElement).src);
+			return;
+		}
 
 		// hold space to pan
-		if (
-			!panning &&
-			event.key === ' ' &&
-			document.activeElement?.tagName !== 'TEXTAREA' &&
-			document.activeElement?.tagName !== 'INPUT'
-		) {
+		if (!panning && event.key === ' ') {
 			panning = true;
 			const oldTool = tool;
 			const oldToolOption = toolOption;
