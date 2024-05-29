@@ -505,6 +505,13 @@ import { save } from './save';
 
 	let panning = false;
 	window.addEventListener('keydown', (event) => {
+		// ignore key events while typing
+		if (
+			document.activeElement?.tagName === 'TEXTAREA' ||
+			document.activeElement?.tagName === 'INPUT'
+		) {
+			return;
+		}
 		// escape deselect
 		if (event.key === 'Escape') {
 			contextDeselect();
