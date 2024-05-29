@@ -113,7 +113,6 @@ import { save } from './save';
 
 	selectAreas.addEventListener('change', () => {
 		current = selectAreas.value;
-		set('current', current);
 		area = areas[current];
 		loadArea();
 	});
@@ -141,7 +140,6 @@ import { save } from './save';
 		};
 		selectAreas.value = key;
 		selectAreas.dispatchEvent(new Event('change'));
-		set('areas', areas);
 	});
 	btnAreaRename.addEventListener('click', () => {
 		const key = window.prompt('rename area', current);
@@ -151,8 +149,6 @@ import { save } from './save';
 		current = key;
 		selectAreas.selectedOptions[0].value =
 			selectAreas.selectedOptions[0].textContent = current;
-		set('current', current);
-		set('areas', areas);
 	});
 	btnAreaDelete.addEventListener('click', () => {
 		if (Object.keys(areas).length <= 1) {
@@ -165,11 +161,11 @@ import { save } from './save';
 		selectAreas.selectedOptions[0].remove();
 		selectAreas.value = current;
 		selectAreas.dispatchEvent(new Event('change'));
-		set('current', current);
-		set('areas', areas);
 	});
 
 	btnSave.addEventListener('click', () => {
+		set('grid', grid);
+		set('current', current);
 		set('areas', areas);
 	});
 	btnExport.addEventListener('click', () => {
@@ -501,7 +497,7 @@ import { save } from './save';
 		// ctrl+s to save
 		if (event.ctrlKey && event.key === 's') {
 			event.preventDefault();
-			set('areas', areas);
+			btnSave.click();
 			return;
 		}
 
