@@ -71,6 +71,19 @@ import { get, set } from './Storage';
 	)
 		throw new Error('Could not find elements');
 
+	const loadArea = () => {
+		layerPins.textContent = '';
+		area.pins.forEach((p, idx) => {
+			const pin = p.type;
+			const elPin = document.createElement('div');
+			elPin.textContent = pin;
+			elPin.style.top = `${p.y}px`;
+			elPin.style.left = `${p.x}px`;
+			layerPins.appendChild(elPin);
+			elPin.dataset.idx = idx.toString(10);
+		});
+	};
+
 	btnAboutToggle.addEventListener('click', () => {
 		divAbout.classList.toggle('show');
 	});
@@ -86,7 +99,7 @@ import { get, set } from './Storage';
 		current = selectAreas.value;
 		set('current', current);
 		area = areas[current];
-		// TODO: change displayed area
+		loadArea();
 		updateZoomEffective();
 		updateMap();
 	});
@@ -263,8 +276,9 @@ import { get, set } from './Storage';
 	const updateContextImages = () => {
 		const el = selected;
 		if (!el) return;
+		const pin = area.pins[parseInt(el.dataset.idx || '', 10)];
 		ulImages.textContent = '';
-		const imgs = el.dataset.images?.split('|') || [];
+		const imgs = pin.images?.split('|') || [];
 		imgs.forEach((i) => {
 			const elImg = document.createElement('img');
 			elImg.src = i;
@@ -283,7 +297,7 @@ import { get, set } from './Storage';
 			btnDelete.textContent = '✖';
 			btnDelete.addEventListener('click', () => {
 				elLi.remove();
-				el.dataset.images = Array.from(ulImages.querySelectorAll('img'))
+				pin.images = Array.from(ulImages.querySelectorAll('img'))
 					.map((i) => i.src)
 					.join('|');
 				updateContextImages();
@@ -304,10 +318,11 @@ import { get, set } from './Storage';
 	};
 	const contextSelect = (el: HTMLElement) => {
 		selected = el;
+		const pin = area.pins[parseInt(selected.dataset.idx || '', 10)];
 		divContext.classList.add('show');
 		const r = selected.getBoundingClientRect();
 		selected.classList.add('selected');
-		textareaNotes.value = selected.dataset.notes || '';
+		textareaNotes.value = pin.notes || '';
 		updateContextImages();
 		divContext.style.top = `${
 			r.bottom < divMapContainer.clientHeight / 2
@@ -354,7 +369,8 @@ import { get, set } from './Storage';
 	});
 	textareaNotes.addEventListener('input', () => {
 		if (!selected) return;
-		selected.dataset.notes = textareaNotes.value;
+		const pin = area.pins[parseInt(selected.dataset.idx || '', 10)];
+		pin.notes = textareaNotes.value;
 	});
 
 	divMapContainer.addEventListener('pointerdown', (event) => {
@@ -384,6 +400,14 @@ import { get, set } from './Storage';
 			elPin.style.top = `${p.y}px`;
 			elPin.style.left = `${p.x}px`;
 			layerPins.appendChild(elPin);
+			elPin.dataset.idx = area.pins.length.toString(10);
+			area.pins.push({
+				x: p.x,
+				y: p.y,
+				type: toolOption,
+				notes: '',
+				images: '',
+			});
 			updateMap();
 		} else if (tool === 'colour') {
 			const colour = toolOption;
@@ -412,9 +436,8 @@ import { get, set } from './Storage';
 
 	const addImageNote = (img: string) => {
 		if (!selected) return;
-		selected.dataset.images = [selected.dataset.images, img]
-			.filter((i) => i)
-			.join('|');
+		const pin = area.pins[parseInt(selected.dataset.idx || '', 10)];
+		pin.images = [pin.images, img].filter((i) => i).join('|');
 		updateContextImages();
 	};
 
@@ -498,6 +521,7 @@ import { get, set } from './Storage';
 		updateMap();
 	});
 
+	loadArea();
 	updateZoomEffective();
 	updateMap();
 })();
