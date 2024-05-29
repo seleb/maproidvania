@@ -278,7 +278,9 @@ section {
 #context {
 	position: absolute;
 	background-color: var(--dark-t);
-	width: 30rem;
+	width: min-content;
+	height: min-content;
+	min-width: 10rem;
 	max-width: 50%;
 	max-height: 50%;
 	display: flex;
@@ -299,6 +301,10 @@ section {
 		>* {
 			flex: auto;
 		}
+	}
+
+	#context-notes {
+		flex: none;
 	}
 
 	#context-images {
