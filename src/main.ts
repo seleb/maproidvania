@@ -1,4 +1,5 @@
 import { get, set } from './Storage';
+import { onPasteImage } from './onPaste';
 import { save } from './save';
 
 (async () => {
@@ -483,14 +484,6 @@ import { save } from './save';
 		divCursor.style.top = `${event.pageY}px`;
 	});
 
-	const onPasteImage = (img: string) => {
-		if (selected) {
-			addImageNote(img);
-		} else {
-			addImage(img);
-		}
-	};
-
 	const addImageNote = (img: string) => {
 		if (!selected) return;
 		const pin = area.pins[parseInt(selected.dataset.idx || '', 10)];
@@ -509,20 +502,11 @@ import { save } from './save';
 	};
 
 	// paste to add image
-	document.addEventListener('paste', (event) => {
-		const items = (event.clipboardData || event.originalEvent.clipboardData)
-			.items;
-		for (let index in items) {
-			const item = items[index];
-			if (item.kind === 'file') {
-				const blob = item.getAsFile();
-				const reader = new FileReader();
-				reader.onload = () => {
-					const result = reader.result as string | null;
-					if (result?.startsWith('data:image')) onPasteImage(result);
-				};
-				reader.readAsDataURL(blob);
-			}
+	onPasteImage((img: string) => {
+		if (selected) {
+			addImageNote(img);
+		} else {
+			addImage(img);
 		}
 	});
 
