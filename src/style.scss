@@ -1,3 +1,10 @@
+@font-face {
+	font-family: "Bitch";
+	font-weight: normal;
+	font-style: normal;
+	src: url("./assets/Bitch.ttf");
+}
+
 :root {
 	color-scheme: dark;
 	color: #e5f3fc;
@@ -6,6 +13,7 @@
 	--dark-t: #{fade-out(#3c1b26, 0.25)};
 	--light: #b9a58d;
 	--lighter: #e5f3fc;
+	font-family: "Bitch", "Comic Sans MS", sans-serif;
 }
 
 $breakpoint: 40em;
@@ -15,7 +23,6 @@ $breakpoint: 40em;
 }
 
 body {
-	font-family: sans-serif;
 	box-sizing: border-box;
 	margin: 0;
 	padding: 1rem;
@@ -36,6 +43,7 @@ input[type="search"],
 input[type="text"],
 textarea,
 select {
+	font-family: inherit;
 	color: inherit;
 	display: block;
 	box-sizing: border-box;
@@ -45,7 +53,6 @@ select {
 	width: 100%;
 	padding: 0.5rem;
 	font-size: 1em;
-	font-family: monospace;
 	background-color: var(--darker);
 	border: solid 1px transparent;
 	border-radius: 0.25rem;
