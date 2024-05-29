@@ -479,7 +479,12 @@ import { get, set } from './Storage';
 		}
 
 		// hold space to pan
-		if (!panning && event.key === ' ') {
+		if (
+			!panning &&
+			event.key === ' ' &&
+			document.activeElement?.tagName !== 'TEXTAREA' &&
+			document.activeElement?.tagName !== 'INPUT'
+		) {
 			panning = true;
 			const oldTool = tool;
 			const oldToolOption = toolOption;
