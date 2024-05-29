@@ -193,7 +193,7 @@ section {
 			}
 
 			&:checked,
-			&:has(:checked) {
+			&:not(select):has(:checked) {
 				border-color: var(--lighter);
 				opacity: 1;
 			}
