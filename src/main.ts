@@ -175,15 +175,38 @@
 
 	let selected: HTMLElement | null = null;
 	const updateContextImages = () => {
-		if (!selected) return;
+		const el = selected;
+		if (!el) return;
 		ulImages.textContent = '';
-		const imgs = selected.dataset.images?.split('|') || [];
+		const imgs = el.dataset.images?.split('|') || [];
 		imgs.forEach((i) => {
 			const elImg = document.createElement('img');
 			elImg.src = i;
 			elImg.draggable = false;
 			const elLi = document.createElement('li');
+
+			const btnOpen = document.createElement('button');
+			btnOpen.title = 'open in new tab';
+			btnOpen.textContent = '🔍';
+			btnOpen.addEventListener('click', () => {
+				window.open(i, '_blank');
+			});
+
+			const btnDelete = document.createElement('button');
+			btnDelete.title = 'delete';
+			btnDelete.textContent = '␡';
+			btnDelete.addEventListener('click', () => {
+				elLi.remove();
+				el.dataset.images = Array.from(ulImages.querySelectorAll('img'))
+					.map((i) => i.src)
+					.join('|');
+				updateContextImages();
+			});
+
+			elLi.appendChild(btnOpen);
+			elLi.appendChild(btnDelete);
 			elLi.appendChild(elImg);
+
 			ulImages.appendChild(elLi);
 		});
 		if (!imgs.length) {
