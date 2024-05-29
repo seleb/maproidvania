@@ -1,5 +1,6 @@
 import { get, set } from './Storage';
 import { load } from './load';
+import { error } from './logger';
 import { onPasteImage } from './onPaste';
 import { save } from './save';
 
@@ -168,22 +169,32 @@ import { save } from './save';
 		set('current', current);
 		set('areas', areas);
 	});
-	btnExport.addEventListener('click', () => {
-		const data = JSON.stringify({ current, areas }, undefined, '\t');
-		save(data);
+	btnExport.addEventListener('click', async () => {
+		try {
+			const data = JSON.stringify({ current, areas }, undefined, '\t');
+			await save(data);
+		} catch (err) {
+			error(err);
+			window.alert(`error: failed to export - ${err.message}`);
+		}
 	});
 	btnImport.addEventListener('click', async () => {
-		const data = await load();
-		const content = JSON.parse(data);
-		if (
-			typeof content.current !== 'string' ||
-			typeof content.areas !== 'object'
-		)
-			throw new Error('invalid file');
-		current = content.current;
-		areas = content.areas;
-		area = areas[current];
-		loadArea();
+		try {
+			const data = await load();
+			const content = JSON.parse(data);
+			if (
+				typeof content.current !== 'string' ||
+				typeof content.areas !== 'object'
+			)
+				throw new Error('invalid file');
+			current = content.current;
+			areas = content.areas;
+			area = areas[current];
+			loadArea();
+		} catch (err) {
+			error(err);
+			window.alert(`error: failed to import - ${err.message}`);
+		}
 	});
 
 	btnColours.forEach((i) => {
