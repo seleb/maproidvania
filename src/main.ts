@@ -364,6 +364,15 @@ import { get, set } from './Storage';
 	btnDelete.addEventListener('click', () => {
 		if (!selected) return;
 		const el = selected;
+		const idx = parseInt(selected.dataset.idx || '', 10);
+		area.pins.splice(idx, 1);
+		let next = el.nextSibling as HTMLElement | null;
+		while (next) {
+			next.dataset.idx = (parseInt(next.dataset.idx || '', 10) - 1).toString(
+				10
+			);
+			next = next.nextSibling as HTMLElement | null;
+		}
 		contextDeselect();
 		el.remove();
 	});
