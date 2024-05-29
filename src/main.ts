@@ -85,6 +85,7 @@ import { save } from './save';
 
 	const loadArea = () => {
 		// populate area select
+		selectAreas.textContent = '';
 		Object.keys(areas).forEach((i) => {
 			const elOption = document.createElement('option');
 			elOption.value = i;
