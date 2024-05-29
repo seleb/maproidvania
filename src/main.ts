@@ -319,6 +319,23 @@ import { get, set } from './Storage';
 				? r.right
 				: r.left - divContext.clientWidth
 		}px`;
+		requestAnimationFrame(() => {
+			window.addEventListener(
+				'pointerdown',
+				(event) => {
+					if (
+						event.target &&
+						![divContext, selected].includes(event.target) &&
+						!(
+							divContext.contains(event.target) ||
+							!selected?.contains(event.target)
+						)
+					)
+						contextDeselect();
+				},
+				{ once: true }
+			);
+		});
 	};
 	const contextDeselect = () => {
 		divContext.classList.remove('show');
