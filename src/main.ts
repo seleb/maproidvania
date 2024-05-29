@@ -1,8 +1,9 @@
 import { get, set } from './Storage';
+import { save } from './save';
 
 (async () => {
 	let current = get('current');
-	const areas = get('areas');
+	let areas = get('areas');
 	let area = areas[current];
 
 	let zoomEffective = 1;
@@ -29,6 +30,9 @@ import { get, set } from './Storage';
 		document.querySelector<HTMLButtonElement>('#btn-area-rename');
 	const btnAreaDelete =
 		document.querySelector<HTMLButtonElement>('#btn-area-delete');
+	const btnSave = document.querySelector<HTMLButtonElement>('#btn-save');
+	const btnExport = document.querySelector<HTMLButtonElement>('#btn-export');
+	const btnImport = document.querySelector<HTMLButtonElement>('#btn-import');
 	const btnSelect = document.querySelector<HTMLInputElement>('#btn-select');
 	const btnPan = document.querySelector<HTMLInputElement>('#btn-pan');
 	const btnText = document.querySelector<HTMLInputElement>('#btn-text');
@@ -61,6 +65,9 @@ import { get, set } from './Storage';
 		!btnAreaAdd ||
 		!btnAreaRename ||
 		!btnAreaDelete ||
+		!btnSave ||
+		!btnExport ||
+		!btnImport ||
 		!btnColours.length ||
 		!btnPins.length ||
 		!divContext ||
@@ -153,6 +160,42 @@ import { get, set } from './Storage';
 		selectAreas.dispatchEvent(new Event('change'));
 		set('current', current);
 		set('areas', areas);
+	});
+
+	btnSave.addEventListener('click', () => {
+		set('areas', areas);
+	});
+	btnExport.addEventListener('click', () => {
+		const data = JSON.stringify({ current, areas }, undefined, '\t');
+		save(data);
+	});
+	btnImport.addEventListener('click', () => {
+		const input = document.createElement('input');
+		input.type = 'file';
+
+		input.onchange = () => {
+			const file = input.files?.[0];
+			if (!file) return;
+
+			// setting up the reader
+			const reader = new FileReader();
+			reader.readAsText(file, 'UTF-8');
+
+			reader.onload = () => {
+				const content = JSON.parse(reader.result?.toString() || '');
+				if (
+					typeof content.current !== 'string' ||
+					typeof content.areas !== 'object'
+				)
+					throw new Error('invalid file');
+				current = content.current;
+				areas = content.areas;
+				area = areas[current];
+				loadArea();
+			};
+		};
+
+		input.click();
 	});
 
 	btnColours.forEach((i) => {
