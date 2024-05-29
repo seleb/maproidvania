@@ -505,6 +505,10 @@ import { save } from './save';
 
 	let panning = false;
 	window.addEventListener('keydown', (event) => {
+		// escape deselect
+		if (event.key === 'Escape') {
+			contextDeselect();
+		}
 		// ctrl+s to save
 		if (event.ctrlKey && event.key === 's') {
 			event.preventDefault();
