@@ -1,4 +1,9 @@
+import { get, set } from './Storage';
+
 (async () => {
+	let current = get('current');
+	const areas = get('areas');
+
 	const bgGridSize = 256;
 
 	const formControls = document.querySelector<HTMLFormElement>('#controls');
@@ -64,23 +69,68 @@
 		divAbout.classList.toggle('show');
 	});
 
+	Object.keys(areas).forEach((i) => {
+		const elOption = document.createElement('option');
+		elOption.value = i;
+		elOption.textContent = i;
+		if (i === current) elOption.selected = true;
+		selectAreas.appendChild(elOption);
+	});
 	selectAreas.addEventListener('change', () => {
-		// TODO: change area
+		current = selectAreas.value;
+		set('current', current);
+		// TODO: change displayed area
 	});
 	btnAreaAdd.addEventListener('click', () => {
-		const key = window.prompt('new area name?', 'area #');
+		const key = window.prompt(
+			'new area name?',
+			`area ${Object.keys(areas).length}`
+		);
 		if (!key) return;
-		// TODO: create new area
+		if (areas[key]) {
+			window.alert('error: an area with that name already exists!');
+			return;
+		}
+		const elOption = document.createElement('option');
+		elOption.value = key;
+		elOption.textContent = key;
+		selectAreas.appendChild(elOption);
+		areas[key] = {
+			offset: { x: 0, y: 0 },
+			zoom: 1,
+			images: [],
+			drawings: [],
+			pins: [],
+			text: [],
+		};
+		selectAreas.value = key;
+		selectAreas.dispatchEvent(new Event('change'));
+		set('areas', areas);
 	});
 	btnAreaRename.addEventListener('click', () => {
-		const key = window.prompt('rename area', 'TODO: current name');
+		const key = window.prompt('rename area', current);
 		if (!key) return;
-		// TODO: rename new area
+		areas[key] = areas[current];
+		delete areas[current];
+		current = key;
+		selectAreas.selectedOptions[0].value =
+			selectAreas.selectedOptions[0].textContent = current;
+		set('current', current);
+		set('areas', areas);
 	});
 	btnAreaDelete.addEventListener('click', () => {
-		if ('TODO: last area check') window.alert('cannot delete only area');
+		if (Object.keys(areas).length <= 1) {
+			window.alert('error: cannot delete only area!');
+			return;
+		}
 		if (!window.confirm('delete area?')) return;
-		// TODO: delete area
+		delete areas[current];
+		current = Object.keys(areas)[0];
+		selectAreas.selectedOptions[0].remove();
+		selectAreas.value = current;
+		selectAreas.dispatchEvent(new Event('change'));
+		set('current', current);
+		set('areas', areas);
 	});
 
 	btnColours.forEach((i) => {
