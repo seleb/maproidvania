@@ -79,6 +79,16 @@ import { save } from './save';
 		throw new Error('Could not find elements');
 
 	const loadArea = () => {
+		// populate area select
+		Object.keys(areas).forEach((i) => {
+			const elOption = document.createElement('option');
+			elOption.value = i;
+			elOption.textContent = i;
+			if (i === current) elOption.selected = true;
+			selectAreas.appendChild(elOption);
+		});
+
+		// pins
 		layerPins.textContent = '';
 		area.pins.forEach((p, idx) => {
 			const pin = p.type;
@@ -89,26 +99,21 @@ import { save } from './save';
 			layerPins.appendChild(elPin);
 			elPin.dataset.idx = idx.toString(10);
 		});
+
+		// display
+		updateZoomEffective();
+		updateMap();
 	};
 
 	btnAboutToggle.addEventListener('click', () => {
 		divAbout.classList.toggle('show');
 	});
 
-	Object.keys(areas).forEach((i) => {
-		const elOption = document.createElement('option');
-		elOption.value = i;
-		elOption.textContent = i;
-		if (i === current) elOption.selected = true;
-		selectAreas.appendChild(elOption);
-	});
 	selectAreas.addEventListener('change', () => {
 		current = selectAreas.value;
 		set('current', current);
 		area = areas[current];
 		loadArea();
-		updateZoomEffective();
-		updateMap();
 	});
 	btnAreaAdd.addEventListener('click', () => {
 		const key = window.prompt(
@@ -579,6 +584,4 @@ import { save } from './save';
 	});
 
 	loadArea();
-	updateZoomEffective();
-	updateMap();
 })();
