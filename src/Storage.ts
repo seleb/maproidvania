@@ -47,9 +47,9 @@ type State = {
 	};
 };
 const initialState: State = {
-	current: 'default',
+	current: 'area 0',
 	areas: {
-		default: {
+		'area 0': {
 			offset: { x: 0, y: 0 },
 			zoom: 1,
 			images: [],
