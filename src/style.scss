@@ -23,12 +23,9 @@ $breakpoint: 40em;
 }
 
 body {
-	box-sizing: border-box;
 	margin: 0;
-	padding: 1rem;
+	padding: 0;
 	background-color: var(--dark);
-	max-width: 40rem;
-	margin-inline: auto;
 }
 
 button,
