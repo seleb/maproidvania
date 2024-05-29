@@ -326,7 +326,7 @@ import { save } from './save';
 		if (!el) return;
 		const pin = area.pins[parseInt(el.dataset.idx || '', 10)];
 		ulImages.textContent = '';
-		const imgs = pin.images?.split('|') || [];
+		const imgs = (pin.images?.split('|') || []).filter((i) => i);
 		imgs.forEach((i) => {
 			const elImg = document.createElement('img');
 			elImg.src = i;

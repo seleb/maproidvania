@@ -343,11 +343,13 @@ section {
 		display: flex;
 		gap: 0.5rem;
 		width: 100%;
+		min-height: 5rem;
 
 		>li {
 			width: 100%;
 			min-width: 4rem;
 			position: relative;
+			padding-top: 2rem;
 
 			button {
 				position: absolute;
