@@ -509,6 +509,14 @@ import { save } from './save';
 		if (event.key === 'Escape') {
 			contextDeselect();
 		}
+		// delete pin
+		if (
+			(event.key === 'Backspace' || event.key === 'Delete') &&
+			selected &&
+			selectedType === 'pin'
+		) {
+			btnDelete.click();
+		}
 		// ctrl+s to save
 		if (event.ctrlKey && event.key === 's') {
 			event.preventDefault();
