@@ -196,6 +196,9 @@
 		selected = el;
 		divContext.classList.add('show');
 		const r = selected.getBoundingClientRect();
+		selected.classList.add('selected');
+		textareaNotes.value = selected.dataset.notes || '';
+		updateContextImages();
 		divContext.style.top = `${
 			r.bottom < divMapContainer.clientHeight / 2
 				? r.bottom
@@ -206,9 +209,6 @@
 				? r.right
 				: r.left - divContext.clientWidth
 		}px`;
-		selected.classList.add('selected');
-		textareaNotes.value = selected.dataset.notes || '';
-		updateContextImages();
 	};
 	const contextDeselect = () => {
 		divContext.classList.remove('show');
