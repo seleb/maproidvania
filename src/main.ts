@@ -12,7 +12,7 @@ import { get, set } from './Storage';
 
 	const bgGridSize = 256;
 
-	const formControls = document.querySelector<HTMLFormElement>('#controls');
+	const divControls = document.querySelector<HTMLDivElement>('#controls');
 	const divMapContainer =
 		document.querySelector<HTMLDivElement>('#map-container');
 	const divMap = document.querySelector<HTMLDivElement>('#map');
@@ -45,7 +45,7 @@ import { get, set } from './Storage';
 		document.querySelector<HTMLTextAreaElement>('#context-notes');
 	const ulImages = document.querySelector<HTMLUListElement>('#context-images');
 	if (
-		!formControls ||
+		!divControls ||
 		!divMapContainer ||
 		!divMap ||
 		!layerDrawings ||
@@ -341,6 +341,7 @@ import { get, set } from './Storage';
 	});
 
 	divMapContainer.addEventListener('pointerdown', (event) => {
+		(document.activeElement as HTMLElement | null)?.blur();
 		event.preventDefault();
 		if (event.button === 1) {
 			startDragging(event);
