@@ -356,6 +356,7 @@ import { save } from './save';
 				const img = area.images[`${x}|${y}`];
 				const el = document.createElement(img ? 'img' : 'div');
 				el.src = img;
+				el.draggable = false;
 				el.dataset.x = x.toString(10);
 				el.dataset.y = y.toString(10);
 				el.style.width = `${grid[0]}px`;
