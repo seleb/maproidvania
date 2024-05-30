@@ -7,6 +7,7 @@ import { load } from './load';
 import { error } from './logger';
 import { onPasteImage } from './onPaste';
 import { save } from './save';
+import { redo, undo } from './undo-redo';
 
 (async () => {
 	let current = get('current');
@@ -773,6 +774,19 @@ import { save } from './save';
 				active.style.fontSize = `${text.size * 100}%`;
 			}
 			return;
+		}
+		// undo
+		if (event.ctrlKey && event.key === 'z') {
+			const a = undo();
+			if (a !== false) toast(['undo', a].filter((i) => i).join(' - '));
+		}
+		// redo
+		if (
+			(event.ctrlKey && event.key === 'y') ||
+			(event.ctrlKey && event.shiftKey && event.key === 'z')
+		) {
+			const a = redo();
+			if (a !== false) toast(['redo', a].filter((i) => i).join(' - '));
 		}
 		// escape deselect
 		if (event.key === 'Escape') {
