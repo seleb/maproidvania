@@ -1,4 +1,5 @@
 import { get, set } from './Storage';
+import { getPath, updatePath } from './drawing';
 import { load } from './load';
 import { error } from './logger';
 import { onPasteImage } from './onPaste';
@@ -138,6 +139,7 @@ import { save } from './save';
 		});
 
 		// display
+		updateDrawings();
 		updateGrid();
 		updateZoomEffective();
 		updateMap();
@@ -308,13 +310,39 @@ import { save } from './save';
 		divMapContainer.style.cursor = 'text';
 	});
 
-	const startDrawing = (colour: string) => {
+	const startDrawing = (event: PointerEvent, colour: string) => {
+		const size = parseFloat(rangeStroke.value);
+		const path = getPath({ points: [], colour, size });
+		layerDrawings.appendChild(path);
+		const points: [number, number][] = [];
+
+		const throttle = 50;
+		let last = 0;
+		const draw = (event: PointerEvent) => {
+			const now = Date.now();
+			const p = getPos(event.clientX, event.clientY);
+			p.x /= zoomEffective;
+			p.y /= zoomEffective;
+			if (now - last < throttle) {
+				points[points.length - 1][0] = p.x;
+				points[points.length - 1][1] = p.y;
+			} else {
+				last = now;
+				points.push([p.x, p.y]);
+			}
+			updatePath(path, points, size);
+		};
+		draw(event);
 		function stopDrawing() {
-			// todo
-			// layerDrawings
+			window.removeEventListener('pointermove', draw);
+			area.drawings.push({
+				points,
+				size,
+				colour,
+			});
+			updatePath(path, points, size);
 		}
-		// todo
-		// layerDrawings
+		window.addEventListener('pointermove', draw);
 		window.addEventListener('pointerup', stopDrawing, { once: true });
 	};
 
@@ -335,6 +363,13 @@ import { save } from './save';
 			.y}px) scale(${zoomEffective})`;
 		document.querySelectorAll<HTMLDivElement>('#pins > *').forEach((i) => {
 			i.style.transform = `translate(-50%, -50%) scale(${1 / zoomEffective})`;
+		});
+	};
+
+	const updateDrawings = () => {
+		layerDrawings.textContent = '';
+		area.drawings.forEach((i) => {
+			layerDrawings.appendChild(getPath(i));
 		});
 	};
 
@@ -607,7 +642,7 @@ import { save } from './save';
 			} else if (tool === 'draw') {
 				event.preventDefault();
 				const colour = toolOption;
-				startDrawing(colour);
+				startDrawing(event, colour);
 			} else if (tool === 'text') {
 				event.preventDefault();
 				const elText = document.createElement('div');

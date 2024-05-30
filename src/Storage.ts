@@ -14,10 +14,9 @@ export type Image = {
 	src: string;
 };
 export type Drawing = {
-	x: number;
-	y: number;
-	path: [number, number][];
+	points: [number, number][];
 	colour: string;
+	size: number;
 };
 export type Pin = {
 	x: number;
