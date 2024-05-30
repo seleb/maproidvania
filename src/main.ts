@@ -415,6 +415,7 @@ import { save } from './save';
 		}
 	};
 	const contextSelect = (el: HTMLElement, type: string) => {
+		contextDeselect();
 		selected = el;
 		selectedType = type;
 		if (type === 'pin') {
