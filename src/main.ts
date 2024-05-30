@@ -41,7 +41,7 @@ import { save } from './save';
 	const btnPan = document.querySelector<HTMLInputElement>('#btn-pan');
 	const btnText = document.querySelector<HTMLInputElement>('#btn-text');
 	const btnColours = document.querySelectorAll<HTMLInputElement>(
-		'#options-colour > *'
+		'#options-colour > input[type="radio"]'
 	);
 	const btnPins = document.querySelectorAll<HTMLInputElement>(
 		'#options-pin input[type="radio"]'
