@@ -487,9 +487,10 @@ import { save } from './save';
 	});
 
 	divMapContainer.addEventListener('pointerdown', (event) => {
-		(document.activeElement as HTMLElement | null)?.blur();
-		event.preventDefault();
+		const active = document.activeElement as HTMLElement | null;
+		if (divControls.contains(active)) active?.blur();
 		if (event.button === 1) {
+			event.preventDefault();
 			startDragging(event);
 			return;
 		} else if (event.button === 0) {
@@ -500,14 +501,20 @@ import { save } from './save';
 					event.pageY
 				) as HTMLElement | null;
 				if (element?.closest('#pins')) {
+					active?.blur();
+					event.preventDefault();
 					contextSelect(element, 'pin');
 				} else if (element?.closest('#images')) {
+					active?.blur();
+					event.preventDefault();
 					contextSelect(element, 'image');
 				}
 				return;
 			} else if (tool === 'pan') {
+				event.preventDefault();
 				startDragging(event);
 			} else if (tool === 'pin') {
+				event.preventDefault();
 				const pin = toolOption;
 				const elPin = document.createElement('div');
 				elPin.textContent = pin;
@@ -527,6 +534,7 @@ import { save } from './save';
 				btnSelect.click();
 				contextSelect(elPin, 'pin');
 			} else if (tool === 'colour') {
+				event.preventDefault();
 				const colour = toolOption;
 				startDrawing(colour);
 			} else if (tool === 'text') {
