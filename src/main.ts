@@ -108,7 +108,7 @@ import { save } from './save';
 		});
 
 		// text
-		layerPins.textContent = '';
+		layerText.textContent = '';
 		area.text.forEach((p, idx) => {
 			const elText = document.createElement('div');
 			elText.contentEditable = 'plaintext-only';
