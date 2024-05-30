@@ -329,7 +329,7 @@ import { save } from './save';
 		const size = parseFloat(rangeStroke.value) / zoomEffective;
 		const path = getPath({ points: [], colour, size });
 		layerDrawings.appendChild(path);
-		const points: [number, number][] = [];
+		let points: [number, number][] = [];
 
 		const throttle = 10;
 		let last = 0;
@@ -343,6 +343,7 @@ import { save } from './save';
 				points[points.length - 1][1] = p.y;
 			} else {
 				last = now;
+				points = simplify(points, 2 / zoomEffective);
 				points.push([p.x, p.y]);
 			}
 			updatePath(path, points, size);
@@ -350,13 +351,12 @@ import { save } from './save';
 		draw(event);
 		function stopDrawing() {
 			window.removeEventListener('pointermove', draw);
-			const simplified = simplify(points, 2 / zoomEffective);
 			area.drawings.push({
-				points: simplified,
+				points,
 				size,
 				colour,
 			});
-			updatePath(path, simplified, size);
+			updatePath(path, points, size);
 		}
 		window.addEventListener('pointermove', draw);
 		window.addEventListener('pointerup', stopDrawing, { once: true });
