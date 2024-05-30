@@ -551,6 +551,8 @@ import { save } from './save';
 			});
 		} else if (type === 'image') {
 			selected.classList.add('selected');
+		} else if (type === 'drawing') {
+			selected.classList.add('selected');
 		}
 	};
 	const contextDeselect = () => {
@@ -614,6 +616,10 @@ import { save } from './save';
 					active?.blur();
 					event.preventDefault();
 					contextSelect(element, 'image');
+				} else if (element?.closest('#drawings')) {
+					active?.blur();
+					event.preventDefault();
+					contextSelect(element, 'drawing');
 				}
 				return;
 			} else if (tool === 'pan') {
