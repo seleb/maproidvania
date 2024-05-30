@@ -380,6 +380,7 @@ import { save } from './save';
 		const drag = (event: PointerEvent) => {
 			area.offset.x = -(event.clientX - start.x) + current.x;
 			area.offset.y = -(event.clientY - start.y) + current.y;
+			if (selected) contextSelect(selected, selectedType);
 			updateMap();
 		};
 		const stopDragging = () => {
@@ -712,6 +713,8 @@ import { save } from './save';
 		};
 		area.offset.x += zoomPoint.x * zoomEffectiveChange;
 		area.offset.y += zoomPoint.y * zoomEffectiveChange;
+
+		if (selected) contextSelect(selected, selectedType);
 		updateMap();
 	});
 
