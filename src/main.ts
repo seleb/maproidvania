@@ -237,15 +237,17 @@ import { save } from './save';
 		updateGrid();
 	});
 
-	btnSave.addEventListener('click', () => {
-		set('grid', grid);
-		set('current', current);
-		set('areas', areas);
+	btnSave.addEventListener('click', async () => {
+		await set('grid', grid);
+		await set('current', current);
+		await set('areas', areas);
+		toast('saved');
 	});
 	btnExport.addEventListener('click', async () => {
 		try {
 			const data = JSON.stringify({ grid, current, areas }, undefined, '\t');
 			await save(data);
+			toast('exported');
 		} catch (err) {
 			error(err);
 			window.alert(`error: failed to export - ${err.message}`);
@@ -264,6 +266,7 @@ import { save } from './save';
 			areas = content.areas;
 			area = areas[current];
 			loadArea();
+			toast('imported');
 		} catch (err) {
 			error(err);
 			window.alert(`error: failed to import - ${err.message}`);
