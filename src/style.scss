@@ -328,8 +328,13 @@ section {
 		}
 
 		#pins {
+			>* {
+				border-radius: 50%;
+			}
+
 			>.selected {
-				filter: drop-shadow(0 0 0.1rem var(--light)) #{"invert()"};
+				outline: solid 4px var(--darker);
+				border: solid 4px var(--lighter);
 			}
 		}
 
