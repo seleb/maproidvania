@@ -375,8 +375,6 @@ import { save } from './save';
 	const startDragging = (event: PointerEvent) => {
 		const current = { ...area.offset };
 		const start = { x: event.clientX, y: event.clientY };
-		area.offset.x = event.clientX;
-		area.offset.y = event.clientY;
 		const cursorOld = divMapContainer.style.cursor;
 		divMapContainer.style.cursor = 'grabbing';
 		const drag = (event: PointerEvent) => {
