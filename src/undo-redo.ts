@@ -16,6 +16,7 @@ export function pushUndoRedo(command: UndoRedo) {
 		stack.shift();
 	}
 	idx = stack.length - 1;
+	stack[idx].redo();
 }
 
 export function undo() {
