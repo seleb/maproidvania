@@ -339,6 +339,44 @@ section {
 	}
 }
 
+@keyframes toast-in {
+	from {
+		transform: translateY(1rem);
+		opacity: 0;
+	}
+}
+
+@keyframes toast-out {
+	to {
+		opacity: 0;
+		padding-block: 0;
+		margin-block: 0;
+		overflow: hidden;
+		height: 0;
+	}
+}
+
+#toasts {
+	height: 100%;
+	list-style: none;
+	margin: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	right: 0;
+	overflow: hidden;
+	padding: 0.5rem;
+
+	>li {
+		margin-bottom: 0.5rem;
+		padding: 0.5rem;
+		border-radius: 0.25rem;
+		background-color: var(--dark-t);
+		animation: toast-in 0.1s ease-out backwards, toast-out 0.1s ease-in forwards;
+		animation-delay: 0s, 2s;
+	}
+}
+
 #map-container {
 	z-index: -2;
 	position: absolute;

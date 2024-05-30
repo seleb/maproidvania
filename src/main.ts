@@ -62,6 +62,7 @@ import { save } from './save';
 	const ulImages = document.querySelector<HTMLUListElement>('#context-images');
 	const inputSearch = document.querySelector<HTMLInputElement>('#search');
 	const ulSearch = document.querySelector<HTMLUListElement>('#search-results');
+	const ulToasts = document.querySelector<HTMLUListElement>('#toasts');
 	if (
 		!divControls ||
 		!divMapContainer ||
@@ -94,9 +95,19 @@ import { save } from './save';
 		!textareaNotes ||
 		!ulImages ||
 		!inputSearch ||
-		!ulSearch
+		!ulSearch ||
+		!ulToasts
 	)
 		throw new Error('Could not find elements');
+
+	const toast = (text: string) => {
+		const li = document.createElement('li');
+		li.textContent = text;
+		ulToasts.appendChild(li);
+		setTimeout(() => {
+			li.remove();
+		}, 2500);
+	};
 
 	const loadArea = () => {
 		// populate area select
