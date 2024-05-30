@@ -220,6 +220,13 @@ section {
 
 		#options-colour {
 			display: contents;
+
+			#stroke {
+				border: none;
+				flex: auto;
+				width: max-content;
+				border-radius: 0.25rem;
+			}
 		}
 	}
 
