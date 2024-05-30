@@ -1,3 +1,4 @@
+import { Search } from 'js-search';
 import { get, set } from './Storage';
 import { getPath, updatePath } from './drawing';
 import { load } from './load';
@@ -57,6 +58,8 @@ import { save } from './save';
 	const textareaNotes =
 		document.querySelector<HTMLTextAreaElement>('#context-notes');
 	const ulImages = document.querySelector<HTMLUListElement>('#context-images');
+	const inputSearch = document.querySelector<HTMLInputElement>('#search');
+	const ulSearch = document.querySelector<HTMLUListElement>('#search-results');
 	if (
 		!divControls ||
 		!divMapContainer ||
@@ -87,7 +90,9 @@ import { save } from './save';
 		!divContext ||
 		!btnDelete ||
 		!textareaNotes ||
-		!ulImages
+		!ulImages ||
+		!inputSearch ||
+		!ulSearch
 	)
 		throw new Error('Could not find elements');
 
@@ -816,12 +821,6 @@ import { save } from './save';
 		}
 	});
 
-	const focus = (x: number, y: number) => {
-		area.offset.x = x - window.innerWidth / 2 / zoomEffective;
-		area.offset.y = y - window.innerHeight / 2 / zoomEffective;
-		updateMap();
-	};
-
 	// zoom in/out
 	divMapContainer.addEventListener('wheel', (event) => {
 		area.offset.x += event.deltaX;
@@ -841,7 +840,62 @@ import { save } from './save';
 
 		updateMap();
 		if (selected) contextSelect(selected, selectedType);
+	});
+
+	// search
+	const focus = (x: number, y: number) => {
+		area.offset.x = x * zoomEffective - divMapContainer.clientWidth / 2;
+		area.offset.y = y * zoomEffective - divMapContainer.clientHeight / 2;
 		updateMap();
+	};
+	let search: Search;
+	type SearchItem = {
+		key: string;
+		text: string;
+		original: ((typeof area)['pins'] | (typeof area)['text'])[number];
+	};
+	inputSearch.addEventListener('focus', () => {
+		search = new Search('key');
+		search.addDocuments(
+			Object.entries(areas).flatMap(([area, { pins, text }]) =>
+				(
+					pins.map((i, idx) => ({
+						key: `${area}-p-${idx}`,
+						text: `${area} - ${i.type} - ${i.notes}`,
+						original: i,
+					})) as SearchItem[]
+				).concat(
+					text.map((i, idx) => ({
+						key: `${area}-t-${idx}`,
+						text: `${area} - ${i.text}`,
+						original: i,
+					}))
+				)
+			)
+		);
+		search.addIndex('text');
+	});
+	inputSearch.addEventListener('input', () => {
+		const results = search.search(inputSearch.value) as SearchItem[];
+		ulSearch.textContent = '';
+		results.forEach((i) => {
+			const li = document.createElement('li');
+			li.textContent = i.text;
+			const btnFocus = document.createElement('button');
+			btnFocus.title = 'focus';
+			btnFocus.textContent = '🔍';
+			btnFocus.addEventListener('click', () => {
+				const [a] = i.key.split('-');
+				if (current !== a) {
+					current = a;
+					area = areas[current];
+					loadArea();
+				}
+				focus(i.original.x, i.original.y);
+			});
+			li.prepend(btnFocus);
+			ulSearch.appendChild(li);
+		});
 	});
 
 	loadArea();
