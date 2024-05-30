@@ -329,16 +329,16 @@ import { save } from './save';
 		layerImages.textContent = '';
 		const [minX, minY, maxX, maxY] = Object.keys(area.images).length
 			? Object.keys(area.images)
-				.map((i) => i.split('|').map((j) => parseInt(j, 10)))
-				.reduce(
-					([minX, minY, maxX, maxY], [x, y]) => [
-						Math.min(minX, x),
-						Math.min(minY, y),
-						Math.max(maxX, x),
-						Math.max(maxY, y),
-					],
-					[Infinity, Infinity, -Infinity, -Infinity]
-				)
+					.map((i) => i.split('|').map((j) => parseInt(j, 10)))
+					.reduce(
+						([minX, minY, maxX, maxY], [x, y]) => [
+							Math.min(minX, x),
+							Math.min(minY, y),
+							Math.max(maxX, x),
+							Math.max(maxY, y),
+						],
+						[Infinity, Infinity, -Infinity, -Infinity]
+					)
 			: [0, 0, 0, 0];
 		for (let y = minY - 1; y <= maxY + 1; ++y) {
 			for (let x = minX - 1; x <= maxX + 1; ++x) {
@@ -374,14 +374,14 @@ import { save } from './save';
 
 	const startDragging = (event: PointerEvent) => {
 		const current = { ...area.offset };
-		const start = { x: event.pageX, y: event.pageY };
-		area.offset.x = event.pageX;
-		area.offset.y = event.pageY;
+		const start = { x: event.clientX, y: event.clientY };
+		area.offset.x = event.clientX;
+		area.offset.y = event.clientY;
 		const cursorOld = divMapContainer.style.cursor;
 		divMapContainer.style.cursor = 'grabbing';
 		const drag = (event: PointerEvent) => {
-			area.offset.x = -(event.pageX - start.x) + current.x;
-			area.offset.y = -(event.pageY - start.y) + current.y;
+			area.offset.x = -(event.clientX - start.x) + current.x;
+			area.offset.y = -(event.clientY - start.y) + current.y;
 			updateMap();
 		};
 		const stopDragging = () => {
@@ -524,8 +524,8 @@ import { save } from './save';
 			if (tool === 'select') {
 				contextDeselect();
 				const element = document.elementFromPoint(
-					event.pageX,
-					event.pageY
+					event.clientX,
+					event.clientY
 				) as HTMLElement | null;
 				if (element?.closest('#pins')) {
 					active?.blur();
@@ -599,8 +599,8 @@ import { save } from './save';
 
 	// sync mouse
 	divMapContainer.addEventListener('pointermove', (event) => {
-		divCursor.style.left = `${event.pageX}px`;
-		divCursor.style.top = `${event.pageY}px`;
+		divCursor.style.left = `${event.clientX}px`;
+		divCursor.style.top = `${event.clientY}px`;
 	});
 
 	const addImageNote = (img: string) => {
