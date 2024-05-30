@@ -429,6 +429,14 @@ section {
 	&.pin {
 		transform: translate(-50%, -50%);
 	}
+
+	&.draw {
+		width: calc(var(--size) - 1rem);
+		height: calc(var(--size) - 1rem);
+		border-radius: 50%;
+		border: solid 0.25rem var(--colour);
+		transform: translate(-50%, -50%);
+	}
 }
 
 #context {

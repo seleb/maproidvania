@@ -275,6 +275,7 @@ import { save } from './save';
 		i.addEventListener('change', () => {
 			tool = 'draw';
 			toolOption = i.value;
+			divCursor.style.setProperty('--colour', i.value);
 			divCursor.textContent = '';
 			divCursor.className = 'draw';
 			divMapContainer.style.cursor = 'crosshair';
@@ -315,6 +316,13 @@ import { save } from './save';
 		divCursor.textContent = 'Type here...';
 		divCursor.className = 'text';
 		divMapContainer.style.cursor = 'text';
+	});
+
+	rangeStroke.addEventListener('input', () => {
+		divCursor.style.setProperty(
+			'--size',
+			`${parseInt(rangeStroke.value, 10)}px`
+		);
 	});
 
 	const startDrawing = (event: PointerEvent, colour: string) => {
