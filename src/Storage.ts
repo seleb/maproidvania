@@ -83,7 +83,7 @@ export function get<K extends keyof State>(k: K) {
 
 export function set<K extends keyof State, V extends State[K]>(k: K, v: V) {
 	internalState[k] = v;
-	storage.setItem('storage', internalState);
+	return storage.setItem('storage', internalState);
 }
 
 export function reset() {
