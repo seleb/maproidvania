@@ -357,16 +357,6 @@ section {
 		display: none;
 	}
 
-	#context-buttons {
-		display: flex;
-		width: 100%;
-		gap: 1px;
-
-		>* {
-			flex: auto;
-		}
-	}
-
 	#context-notes {
 		flex: none;
 	}

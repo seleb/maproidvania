@@ -46,7 +46,6 @@ import { save } from './save';
 	const btnPins =
 		document.querySelectorAll<HTMLInputElement>('#options-pin input');
 	const divContext = document.querySelector<HTMLDivElement>('#context');
-	const btnMove = document.querySelector<HTMLButtonElement>('#context-move');
 	const btnDelete =
 		document.querySelector<HTMLButtonElement>('#context-delete');
 	const textareaNotes =
@@ -77,7 +76,6 @@ import { save } from './save';
 		!btnColours.length ||
 		!btnPins.length ||
 		!divContext ||
-		!btnMove ||
 		!btnDelete ||
 		!textareaNotes ||
 		!ulImages
@@ -391,6 +389,32 @@ import { save } from './save';
 		window.addEventListener('pointerup', stopDragging, { once: true });
 	};
 
+	const startMoving = (
+		event: PointerEvent,
+		element: HTMLElement,
+		update: (x: number, y: number) => void
+	) => {
+		const start = { x: event.clientX, y: event.clientY };
+		const elStart = {
+			x: parseInt(element.style.left, 10),
+			y: parseInt(element.style.top, 10),
+		};
+		const cursorOld = divMapContainer.style.cursor;
+		divMapContainer.style.cursor = 'move';
+		const move = (event: PointerEvent) => {
+			update(
+				(event.clientX - start.x) / zoomEffective + elStart.x,
+				(event.clientY - start.y) / zoomEffective + elStart.y
+			);
+		};
+		const stopMoving = () => {
+			window.removeEventListener('pointermove', move);
+			divMapContainer.style.cursor = cursorOld;
+		};
+		window.addEventListener('pointermove', move);
+		window.addEventListener('pointerup', stopMoving, { once: true });
+	};
+
 	let selected: HTMLElement | null = null;
 	let selectedType = '';
 	const updateContextImages = () => {
@@ -494,9 +518,6 @@ import { save } from './save';
 		}
 	};
 
-	btnMove.addEventListener('click', () => {
-		window.alert('TODO: implement');
-	});
 	btnDelete.addEventListener('click', () => {
 		if (!selected) return;
 		const el = selected;
@@ -530,6 +551,14 @@ import { save } from './save';
 					active?.blur();
 					event.preventDefault();
 					contextSelect(element, 'pin');
+					const pin = area.pins[parseInt(element.dataset.idx || '', 10)];
+					startMoving(event, element, (x, y) => {
+						element.style.left = `${x}px`;
+						element.style.top = `${y}px`;
+						pin.x = x;
+						pin.y = y;
+						contextSelect(element, 'pin');
+					});
 				} else if (element?.closest('#images')) {
 					active?.blur();
 					event.preventDefault();
