@@ -604,7 +604,7 @@ import { save } from './save';
 				updateMap();
 				btnSelect.click();
 				contextSelect(elPin, 'pin');
-			} else if (tool === 'colour') {
+			} else if (tool === 'draw') {
 				event.preventDefault();
 				const colour = toolOption;
 				startDrawing(colour);
