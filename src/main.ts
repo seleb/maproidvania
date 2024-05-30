@@ -43,6 +43,7 @@ import { save } from './save';
 	const btnColours = document.querySelectorAll<HTMLInputElement>(
 		'#options-colour > input[type="radio"]'
 	);
+	const rangeStroke = document.querySelector<HTMLInputElement>('#stroke');
 	const btnPins = document.querySelectorAll<HTMLInputElement>(
 		'#options-pin input[type="radio"]'
 	);
@@ -78,6 +79,7 @@ import { save } from './save';
 		!btnExport ||
 		!btnImport ||
 		!btnColours.length ||
+		!rangeStroke ||
 		!btnPins.length ||
 		!btnCustomPin ||
 		!btnCustomPinEntry ||
