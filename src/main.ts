@@ -118,6 +118,7 @@ import { save } from './save';
 			elText.contentEditable = 'plaintext-only';
 			elText.style.top = `${p.y}px`;
 			elText.style.left = `${p.x}px`;
+			elText.style.fontSize = `${p.size * 100}%`;
 			elText.textContent = p.text;
 			elText.dataset.idx = idx.toString(10);
 			layerText.appendChild(elText);
@@ -611,12 +612,14 @@ import { save } from './save';
 				const p = getPosMouseMap();
 				elText.style.top = `${p.y}px`;
 				elText.style.left = `${p.x}px`;
+				elText.style.fontSize = `200%`;
 				layerText.appendChild(elText);
 				elText.dataset.idx = area.text.length.toString(10);
 				area.text.push({
 					x: p.x,
 					y: p.y,
 					text: '',
+					size: 2,
 				});
 				updateMap();
 				btnSelect.click();
@@ -675,6 +678,26 @@ import { save } from './save';
 			active?.tagName === 'INPUT' ||
 			active?.contentEditable === 'plaintext-only'
 		) {
+			// ctrl+(-/=) to change text size
+			if (
+				event.ctrlKey &&
+				event.key === '=' &&
+				active.parentElement === layerText
+			) {
+				event.preventDefault();
+				const text = area.text[parseInt(active.dataset.idx || '', 10)];
+				text.size *= 2;
+				active.style.fontSize = `${text.size * 100}%`;
+			} else if (
+				event.ctrlKey &&
+				event.key === '-' &&
+				active.parentElement === layerText
+			) {
+				event.preventDefault();
+				const text = area.text[parseInt(active.dataset.idx || '', 10)];
+				text.size /= 2;
+				active.style.fontSize = `${text.size * 100}%`;
+			}
 			return;
 		}
 		// escape deselect

@@ -30,6 +30,7 @@ export type Text = {
 	x: number;
 	y: number;
 	text: string;
+	size: number;
 };
 export type Area = {
 	offset: { x: number; y: number };
