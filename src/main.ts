@@ -318,7 +318,7 @@ import { save } from './save';
 	});
 
 	const startDrawing = (event: PointerEvent, colour: string) => {
-		const size = parseFloat(rangeStroke.value);
+		const size = parseFloat(rangeStroke.value) / zoomEffective;
 		const path = getPath({ points: [], colour, size });
 		layerDrawings.appendChild(path);
 		const points: [number, number][] = [];
