@@ -51,6 +51,13 @@ export function updatePath(
 	path.setAttributeNS(
 		null,
 		'd',
-		getSvgPathFromStroke(getStroke(points, { size }))
+		getSvgPathFromStroke(
+			getStroke(points, {
+				size,
+				smoothing: 0.5,
+				streamline: 0.25,
+				thinning: 0.5,
+			})
+		)
 	);
 }

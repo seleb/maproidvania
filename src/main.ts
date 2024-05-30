@@ -1,4 +1,5 @@
 import { Search } from 'js-search';
+import simplify from 'simplify-path';
 import { get, set } from './Storage';
 import { getPath, updatePath } from './drawing';
 import { highlight } from './highlight';
@@ -322,7 +323,7 @@ import { save } from './save';
 		layerDrawings.appendChild(path);
 		const points: [number, number][] = [];
 
-		const throttle = 50;
+		const throttle = 10;
 		let last = 0;
 		const draw = (event: PointerEvent) => {
 			const now = Date.now();
@@ -341,12 +342,13 @@ import { save } from './save';
 		draw(event);
 		function stopDrawing() {
 			window.removeEventListener('pointermove', draw);
+			const simplified = simplify(points, 2 / zoomEffective);
 			area.drawings.push({
-				points,
+				points: simplified,
 				size,
 				colour,
 			});
-			updatePath(path, points, size);
+			updatePath(path, simplified, size);
 		}
 		window.addEventListener('pointermove', draw);
 		window.addEventListener('pointerup', stopDrawing, { once: true });

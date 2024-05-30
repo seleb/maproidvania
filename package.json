@@ -59,6 +59,7 @@
 		"localforage": "^1.10.0",
 		"perfect-freehand": "^1.2.2",
 		"sass": "^1.71.0",
+		"simplify-path": "^1.1.0",
 		"typescript": "^5.0.4",
 		"vite": "^5.0.4"
 	}
