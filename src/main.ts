@@ -839,6 +839,7 @@ import { save } from './save';
 		area.offset.x += zoomPoint.x * zoomEffectiveChange;
 		area.offset.y += zoomPoint.y * zoomEffectiveChange;
 
+		updateMap();
 		if (selected) contextSelect(selected, selectedType);
 		updateMap();
 	});
