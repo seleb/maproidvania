@@ -1,6 +1,7 @@
 import { Search } from 'js-search';
 import { get, set } from './Storage';
 import { getPath, updatePath } from './drawing';
+import { highlight } from './highlight';
 import { load } from './load';
 import { error } from './logger';
 import { onPasteImage } from './onPaste';
@@ -861,13 +862,13 @@ import { save } from './save';
 				(
 					pins.map((i, idx) => ({
 						key: `${area}-p-${idx}`,
-						text: `${area} - ${i.type} - ${i.notes}`,
+						text: [area, i.type, i.notes].filter((i) => i).join(' > '),
 						original: i,
 					})) as SearchItem[]
 				).concat(
 					text.map((i, idx) => ({
 						key: `${area}-t-${idx}`,
-						text: `${area} - ${i.text}`,
+						text: [area, i.text].filter((i) => i).join(' > '),
 						original: i,
 					}))
 				)
@@ -880,7 +881,9 @@ import { save } from './save';
 		ulSearch.textContent = '';
 		results.forEach((i) => {
 			const li = document.createElement('li');
-			li.textContent = i.text;
+			const span = document.createElement('span');
+			span.innerHTML = i.text;
+			highlight(span, inputSearch.value, search.tokenizer.tokenize);
 			const btnFocus = document.createElement('button');
 			btnFocus.title = 'focus';
 			btnFocus.textContent = '🔍';
@@ -893,7 +896,8 @@ import { save } from './save';
 				}
 				focus(i.original.x, i.original.y);
 			});
-			li.prepend(btnFocus);
+			li.appendChild(btnFocus);
+			li.appendChild(span);
 			ulSearch.appendChild(li);
 		});
 	});

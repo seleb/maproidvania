@@ -302,12 +302,30 @@ section {
 			width: 100%;
 			display: flex;
 			gap: 0.5rem;
-			white-space: pre;
 			background-color: rgba(0, 0, 0, 0.1);
 			align-items: center;
 			margin-bottom: 1px;
 
-			button {
+			>span {
+				white-space: pre;
+
+				mark {
+					color: inherit;
+					background-color: rgba(255 255 0 / 0.25);
+
+					&.exact {
+						color: #000;
+						background-color: rgb(255 255 0);
+
+						mark {
+							color: unset;
+							background-color: unset;
+						}
+					}
+				}
+			}
+
+			>button {
 				align-self: stretch;
 			}
 
