@@ -668,10 +668,12 @@ import { save } from './save';
 
 	let panning = false;
 	window.addEventListener('keydown', (event) => {
-		// ignore key events while typing
+		const active = document.activeElement as HTMLElement | null;
+		// ignore most key events while typing
 		if (
-			document.activeElement?.tagName === 'TEXTAREA' ||
-			document.activeElement?.tagName === 'INPUT'
+			active?.tagName === 'TEXTAREA' ||
+			active?.tagName === 'INPUT' ||
+			active?.contentEditable === 'plaintext-only'
 		) {
 			return;
 		}
