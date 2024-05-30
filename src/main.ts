@@ -43,8 +43,12 @@ import { save } from './save';
 	const btnColours = document.querySelectorAll<HTMLInputElement>(
 		'#options-colour > *'
 	);
-	const btnPins =
-		document.querySelectorAll<HTMLInputElement>('#options-pin input');
+	const btnPins = document.querySelectorAll<HTMLInputElement>(
+		'#options-pin input[type="radio"]'
+	);
+	const btnCustomPin = document.querySelector<HTMLInputElement>('#custom-pin');
+	const btnCustomPinEntry =
+		document.querySelector<HTMLInputElement>('#custom-pin-entry');
 	const divContext = document.querySelector<HTMLDivElement>('#context');
 	const btnDelete =
 		document.querySelector<HTMLButtonElement>('#context-delete');
@@ -75,6 +79,8 @@ import { save } from './save';
 		!btnImport ||
 		!btnColours.length ||
 		!btnPins.length ||
+		!btnCustomPin ||
+		!btnCustomPinEntry ||
 		!divContext ||
 		!btnDelete ||
 		!textareaNotes ||
@@ -261,6 +267,12 @@ import { save } from './save';
 			divCursor.className = 'draw';
 			divMapContainer.style.cursor = 'crosshair';
 		});
+	});
+
+	btnCustomPinEntry.addEventListener('input', () => {
+		btnCustomPin.value = btnCustomPinEntry.value;
+		btnCustomPin.nextElementSibling.textContent = btnCustomPin.value;
+		btnCustomPin.disabled = !btnCustomPin.value.trim();
 	});
 	btnPins.forEach((i) => {
 		i.addEventListener('change', () => {

@@ -249,8 +249,13 @@ section {
 	#options-pin {
 		font-size: 110%;
 
-		input {
+		>label>input {
 			display: none;
+		}
+
+		>label:has(:disabled) {
+			opacity: 0.25;
+			cursor: not-allowed;
 		}
 
 		>input {
@@ -262,8 +267,12 @@ section {
 		background-color: var(--darker);
 	}
 
-	#options-pin>* {
+	#options-pin>label {
 		background-color: var(--light);
+	}
+
+	#custom-pin-entry {
+		border-radius: 0.25rem;
 	}
 
 	#btn-grid {
