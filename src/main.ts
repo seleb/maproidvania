@@ -523,6 +523,8 @@ import { save } from './save';
 					images: '',
 				});
 				updateMap();
+				btnSelect.click();
+				contextSelect(elPin, 'pin');
 			} else if (tool === 'colour') {
 				const colour = toolOption;
 				startDrawing(colour);
