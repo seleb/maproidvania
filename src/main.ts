@@ -757,6 +757,21 @@ import { save } from './save';
 			delete area.images[`${selected.dataset.x}|${selected.dataset.y}`];
 			updateGrid();
 		}
+		// delete drawing
+		if (
+			(event.key === 'Backspace' || event.key === 'Delete') &&
+			selected &&
+			selectedType === 'drawing'
+		) {
+			if (!selected) return;
+			const el = selected;
+			const idx = Array.from(selected.parentElement?.children || []).indexOf(
+				el
+			);
+			area.drawings.splice(idx, 1);
+			updateIdxs(el);
+			el.remove();
+		}
 		// delete pin
 		if (
 			(event.key === 'Backspace' || event.key === 'Delete') &&
