@@ -107,6 +107,29 @@ import { save } from './save';
 			elPin.dataset.idx = idx.toString(10);
 		});
 
+		// text
+		layerPins.textContent = '';
+		area.text.forEach((p, idx) => {
+			const elText = document.createElement('div');
+			elText.contentEditable = 'plaintext-only';
+			elText.style.top = `${p.y}px`;
+			elText.style.left = `${p.x}px`;
+			elText.textContent = p.text;
+			elText.dataset.idx = idx.toString(10);
+			layerText.appendChild(elText);
+			elText.addEventListener('input', () => {
+				area.text[parseInt(elText.dataset.idx || '', 10)].text =
+					elText.textContent || '';
+			});
+			elText.addEventListener('blur', () => {
+				if (!elText.textContent?.trim()) {
+					area.text.splice(parseInt(elText.dataset.idx || '', 10), 1);
+					updateIdxs(elText);
+					elText.remove();
+				}
+			});
+		});
+
 		// display
 		updateGrid();
 		updateZoomEffective();
@@ -306,16 +329,16 @@ import { save } from './save';
 		layerImages.textContent = '';
 		const [minX, minY, maxX, maxY] = Object.keys(area.images).length
 			? Object.keys(area.images)
-					.map((i) => i.split('|').map((j) => parseInt(j, 10)))
-					.reduce(
-						([minX, minY, maxX, maxY], [x, y]) => [
-							Math.min(minX, x),
-							Math.min(minY, y),
-							Math.max(maxX, x),
-							Math.max(maxY, y),
-						],
-						[Infinity, Infinity, -Infinity, -Infinity]
-					)
+				.map((i) => i.split('|').map((j) => parseInt(j, 10)))
+				.reduce(
+					([minX, minY, maxX, maxY], [x, y]) => [
+						Math.min(minX, x),
+						Math.min(minY, y),
+						Math.max(maxX, x),
+						Math.max(maxY, y),
+					],
+					[Infinity, Infinity, -Infinity, -Infinity]
+				)
 			: [0, 0, 0, 0];
 		for (let y = minY - 1; y <= maxY + 1; ++y) {
 			for (let x = minX - 1; x <= maxX + 1; ++x) {
@@ -462,6 +485,16 @@ import { save } from './save';
 		selected = null;
 	};
 
+	const updateIdxs = (el: HTMLElement) => {
+		let next = el.nextSibling as HTMLElement | null;
+		while (next) {
+			next.dataset.idx = (parseInt(next.dataset.idx || '', 10) - 1).toString(
+				10
+			);
+			next = next.nextSibling as HTMLElement | null;
+		}
+	};
+
 	btnMove.addEventListener('click', () => {
 		window.alert('TODO: implement');
 	});
@@ -470,13 +503,7 @@ import { save } from './save';
 		const el = selected;
 		const idx = parseInt(selected.dataset.idx || '', 10);
 		area.pins.splice(idx, 1);
-		let next = el.nextSibling as HTMLElement | null;
-		while (next) {
-			next.dataset.idx = (parseInt(next.dataset.idx || '', 10) - 1).toString(
-				10
-			);
-			next = next.nextSibling as HTMLElement | null;
-		}
+		updateIdxs(el);
 		contextDeselect();
 		el.remove();
 	});
@@ -538,21 +565,34 @@ import { save } from './save';
 				const colour = toolOption;
 				startDrawing(colour);
 			} else if (tool === 'text') {
-				const elText = document.createElement('textarea');
-				elText.placeholder = 'Type here...';
+				event.preventDefault();
+				const elText = document.createElement('div');
+				elText.contentEditable = 'plaintext-only';
 				const p = getPosMouseMap();
 				elText.style.top = `${p.y}px`;
 				elText.style.left = `${p.x}px`;
 				layerText.appendChild(elText);
 				elText.dataset.idx = area.text.length.toString(10);
-				area.pins.push({
+				area.text.push({
 					x: p.x,
 					y: p.y,
-					type: toolOption,
-					notes: '',
-					images: '',
+					text: '',
 				});
 				updateMap();
+				btnSelect.click();
+				elText.focus();
+
+				elText.addEventListener('input', () => {
+					area.text[parseInt(elText.dataset.idx || '', 10)].text =
+						elText.textContent || '';
+				});
+				elText.addEventListener('blur', () => {
+					if (!elText.textContent?.trim()) {
+						area.text.splice(parseInt(elText.dataset.idx || '', 10), 1);
+						updateIdxs(elText);
+						elText.remove();
+					}
+				});
 			}
 		}
 	});
