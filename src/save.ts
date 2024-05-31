@@ -1,4 +1,7 @@
 export async function save(data: string) {
+	if (!('showSaveFilePicker' in window)) {
+		throw new Error('browser does not support native file system access');
+	}
 	const options = {
 		types: [
 			{
