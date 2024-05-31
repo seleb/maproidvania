@@ -828,17 +828,8 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				elText.style.top = `${p.y}px`;
 				elText.style.left = `${p.x}px`;
 				elText.style.fontSize = `200%`;
-				layerText.appendChild(elText);
 				elText.dataset.idx = area.text.length.toString(10);
-				area.text.push({
-					x: p.x,
-					y: p.y,
-					text: '',
-					size: 2,
-				});
-				updateMap();
 				btnSelect.click();
-				elText.focus();
 
 				elText.addEventListener('input', () => {
 					area.text[parseInt(elText.dataset.idx || '', 10)].text =
@@ -850,6 +841,25 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 						updateIdxs(elText);
 						elText.remove();
 					}
+				});
+				const textObj = {
+					x: p.x,
+					y: p.y,
+					text: '',
+					size: 2,
+				};
+
+				pushUndoRedo({
+					name: 'place text',
+					undo() {
+						elText.remove();
+						area.text.pop();
+					},
+					redo() {
+						layerText.appendChild(elText);
+						area.text.push(textObj);
+						elText.focus();
+					},
 				});
 			}
 		}
