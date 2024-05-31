@@ -117,16 +117,21 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		loadArea();
 	};
 
-	const loadArea = () => {
-		// populate area select
+	const updateAreaSelect = () => {
 		selectAreas.textContent = '';
-		Object.keys(areas).forEach((i) => {
-			const elOption = document.createElement('option');
-			elOption.value = i;
-			elOption.textContent = i;
-			if (i === current) elOption.selected = true;
-			selectAreas.appendChild(elOption);
-		});
+		Object.keys(areas)
+			.sort()
+			.forEach((i) => {
+				const elOption = document.createElement('option');
+				elOption.value = i;
+				elOption.textContent = i;
+				if (i === current) elOption.selected = true;
+				selectAreas.appendChild(elOption);
+			});
+	};
+
+	const loadArea = () => {
+		updateAreaSelect();
 
 		// pins
 		layerPins.textContent = '';
@@ -199,9 +204,6 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			return;
 		}
 		const areaOld = current;
-		const elOption = document.createElement('option');
-		elOption.value = areaNew;
-		elOption.textContent = areaNew;
 		const areaObj = {
 			offset: { x: 0, y: 0 },
 			zoom: 1,
@@ -213,14 +215,13 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		pushUndoRedo({
 			name: 'create area',
 			undo() {
-				elOption.remove();
-				setArea(areaOld);
 				delete areas[areaNew];
-				loadArea();
+				updateAreaSelect();
+				setArea(areaOld);
 			},
 			redo() {
-				selectAreas.appendChild(elOption);
 				areas[areaNew] = areaObj;
+				updateAreaSelect();
 				setArea(areaNew);
 			},
 		});
