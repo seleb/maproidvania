@@ -130,10 +130,12 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			});
 	};
 
-	const loadArea = () => {
-		updateAreaSelect();
-
-		// pins
+	const updatePinsScale = () => {
+		document.querySelectorAll<HTMLDivElement>('#pins > *').forEach((i) => {
+			i.style.transform = `translate(-50%, -50%) scale(${1 / zoomEffective})`;
+		});
+	};
+	const updatePins = () => {
 		layerPins.textContent = '';
 		area.pins.forEach((p, idx) => {
 			const pin = p.type;
@@ -144,6 +146,12 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			layerPins.appendChild(elPin);
 			elPin.dataset.idx = idx.toString(10);
 		});
+		updatePinsScale();
+	};
+
+	const loadArea = () => {
+		updateAreaSelect();
+		updatePins();
 
 		// text
 		layerText.textContent = '';
@@ -487,9 +495,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		divMapContainer.style.backgroundPositionY = `${-area.offset.y}px`;
 		divMap.style.transform = `translate(${-area.offset.x}px, ${-area.offset
 			.y}px) scale(${zoomEffective})`;
-		document.querySelectorAll<HTMLDivElement>('#pins > *').forEach((i) => {
-			i.style.transform = `translate(-50%, -50%) scale(${1 / zoomEffective})`;
-		});
+		updatePinsScale();
 	};
 
 	const updateDrawings = () => {
@@ -713,12 +719,22 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 
 	btnDelete.addEventListener('click', () => {
 		if (!selected) return;
-		const el = selected;
 		const idx = parseInt(selected.dataset.idx || '', 10);
-		area.pins.splice(idx, 1);
-		updateIdxs(el);
-		contextDeselect();
-		el.remove();
+		const pin = area.pins[idx];
+
+		pushUndoRedo({
+			name: 'delete pin',
+			undo() {
+				area.pins.splice(idx, 0, pin);
+				updatePins();
+				contextSelect(layerPins.children[idx], 'pin');
+			},
+			redo() {
+				area.pins.splice(idx, 1);
+				updatePins();
+				contextDeselect();
+			},
+		});
 	});
 	textareaNotes.addEventListener('input', () => {
 		if (!selected) return;
