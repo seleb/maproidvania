@@ -881,8 +881,20 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	const addImage = (img: string) => {
 		if (!selected) return;
 		const key = `${selected.dataset.x}|${selected.dataset.y}`;
-		area.images[key] = img;
-		updateGrid();
+		const imgOld = area.images[key];
+
+		pushUndoRedo({
+			name: 'place image',
+			undo() {
+				if (imgOld) area.images[key] = imgOld;
+				else delete area.images[key];
+				updateGrid();
+			},
+			redo() {
+				area.images[key] = img;
+				updateGrid();
+			},
+		});
 	};
 
 	// paste to add image
