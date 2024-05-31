@@ -227,13 +227,27 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		});
 	});
 	btnAreaRename.addEventListener('click', () => {
-		const key = window.prompt('rename area', current);
-		if (!key) return;
-		areas[key] = areas[current];
-		delete areas[current];
-		current = key;
-		selectAreas.selectedOptions[0].value =
-			selectAreas.selectedOptions[0].textContent = current;
+		const areaOld = current;
+		const areaNew = window.prompt('rename area', current);
+		if (!areaNew || areaNew === areaOld) return;
+
+		pushUndoRedo({
+			name: 'rename area',
+			undo() {
+				areas[areaOld] = areas[areaNew];
+				delete areas[areaNew];
+				current = areaOld;
+				selectAreas.selectedOptions[0].value =
+					selectAreas.selectedOptions[0].textContent = areaOld;
+			},
+			redo() {
+				areas[areaNew] = areas[areaOld];
+				delete areas[areaOld];
+				current = areaNew;
+				selectAreas.selectedOptions[0].value =
+					selectAreas.selectedOptions[0].textContent = areaNew;
+			},
+		});
 	});
 	btnAreaDelete.addEventListener('click', () => {
 		if (Object.keys(areas).length <= 1) {
