@@ -616,9 +616,8 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 
 	let selected: HTMLElement | null = null;
 	let selectedType = '';
-	const updateContextImages = () => {
-		const el = selected;
-		if (!el) return;
+	const updateContextImages = (el: HTMLElement) => {
+		if (el !== selected) return;
 		const pin = area.pins[parseInt(el.dataset.idx || '', 10)];
 		ulImages.textContent = '';
 		const imgs = (pin.images?.split('|') || []).filter((i) => i);
@@ -643,7 +642,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				pin.images = Array.from(ulImages.querySelectorAll('img'))
 					.map((i) => i.src)
 					.join('|');
-				updateContextImages();
+				updateContextImages(el);
 			});
 
 			elLi.appendChild(btnOpen);
@@ -669,7 +668,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			const r = selected.getBoundingClientRect();
 			selected.classList.add('selected');
 			textareaNotes.value = pin.notes || '';
-			updateContextImages();
+			updateContextImages(el);
 			divContext.style.top = `${
 				r.bottom < divMapContainer.clientHeight / 2
 					? r.bottom
@@ -872,10 +871,23 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	});
 
 	const addImageNote = (img: string) => {
-		if (!selected) return;
-		const pin = area.pins[parseInt(selected.dataset.idx || '', 10)];
-		pin.images = [pin.images, img].filter((i) => i).join('|');
-		updateContextImages();
+		const el = selected;
+		if (!el) return;
+		const pin = area.pins[parseInt(el.dataset.idx || '', 10)];
+		const imagesOld = pin.images;
+		const imagesNew = [pin.images, img].filter((i) => i).join('|');
+
+		pushUndoRedo({
+			name: 'add image to pin',
+			undo() {
+				pin.images = imagesOld;
+				updateContextImages(el);
+			},
+			redo() {
+				pin.images = imagesNew;
+				updateContextImages(el);
+			},
+		});
 	};
 
 	const addImage = (img: string) => {
