@@ -598,15 +598,17 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				y: parseInt(element.style.top, 10),
 			};
 
-			pushUndoRedo({
-				name: 'move',
-				undo() {
-					update(elStart.x, elStart.y);
-				},
-				redo() {
-					update(elEnd.x, elEnd.y);
-				},
-			});
+			if (elEnd.x !== elStart.x || elEnd.y !== elStart.y) {
+				pushUndoRedo({
+					name: 'move',
+					undo() {
+						update(elStart.x, elStart.y);
+					},
+					redo() {
+						update(elEnd.x, elEnd.y);
+					},
+				});
+			}
 		};
 		window.addEventListener('pointermove', move);
 		window.addEventListener('pointerup', stopMoving, { once: true });
