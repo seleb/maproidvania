@@ -791,18 +791,31 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				const p = getPosMouseMap();
 				elPin.style.top = `${p.y}px`;
 				elPin.style.left = `${p.x}px`;
-				layerPins.appendChild(elPin);
 				elPin.dataset.idx = area.pins.length.toString(10);
-				area.pins.push({
+				btnSelect.click();
+				const pinObj = {
 					x: p.x,
 					y: p.y,
 					type: toolOption,
 					notes: '',
 					images: '',
+				};
+
+				pushUndoRedo({
+					name: 'place pin',
+					undo() {
+						contextDeselect();
+						area.pins.pop();
+						elPin.remove();
+						updateMap();
+					},
+					redo() {
+						layerPins.appendChild(elPin);
+						area.pins.push(pinObj);
+						updateMap();
+						contextSelect(elPin, 'pin');
+					},
 				});
-				updateMap();
-				btnSelect.click();
-				contextSelect(elPin, 'pin');
 			} else if (tool === 'draw') {
 				event.preventDefault();
 				const colour = toolOption;
