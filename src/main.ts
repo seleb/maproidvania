@@ -467,12 +467,12 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			pushUndoRedo({
 				name: 'draw',
 				undo() {
-					path.remove();
 					area.drawings.pop();
+					updateDrawings();
 				},
 				redo() {
-					layerDrawings.appendChild(path);
 					area.drawings.push(drawing);
+					updateDrawings();
 				},
 			});
 		};
