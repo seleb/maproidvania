@@ -250,16 +250,36 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		});
 	});
 	btnAreaDelete.addEventListener('click', () => {
+		const areaOld = current;
 		if (Object.keys(areas).length <= 1) {
 			window.alert('error: cannot delete only area!');
 			return;
 		}
 		if (!window.confirm('delete area?')) return;
-		delete areas[current];
-		current = Object.keys(areas)[0];
-		selectAreas.selectedOptions[0].remove();
-		selectAreas.value = current;
-		selectAreas.dispatchEvent(new Event('change'));
+		const areaNew = Object.keys(areas)[0];
+		const areaObj = areas[areaOld];
+		const elOption = selectAreas.selectedOptions[0];
+		const idxOption = selectAreas.selectedIndex;
+
+		pushUndoRedo({
+			name: 'delete area',
+			undo() {
+				current = areaOld;
+				areas[areaOld] = areaObj;
+				selectAreas.insertBefore(elOption, selectAreas.children[idxOption]);
+				selectAreas.value = areaOld;
+				area = areas[areaOld];
+				loadArea();
+			},
+			redo() {
+				current = areaNew;
+				delete areas[areaOld];
+				elOption.remove();
+				selectAreas.value = areaNew;
+				area = areas[areaNew];
+				loadArea();
+			},
+		});
 	});
 
 	btnGrid.addEventListener('click', () => {
