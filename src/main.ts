@@ -993,14 +993,22 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			selected &&
 			selectedType === 'drawing'
 		) {
-			if (!selected) return;
-			const el = selected;
 			const idx = Array.from(selected.parentElement?.children || []).indexOf(
-				el
+				selected
 			);
-			area.drawings.splice(idx, 1);
-			updateIdxs(el);
-			el.remove();
+			const drawing = area.drawings[idx];
+
+			pushUndoRedo({
+				name: 'delete drawing',
+				undo() {
+					area.drawings.splice(idx, 0, drawing);
+					updateDrawings();
+				},
+				redo() {
+					area.drawings.splice(idx, 1);
+					updateDrawings();
+				},
+			});
 		}
 		// delete pin
 		if (
