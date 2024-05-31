@@ -1,6 +1,6 @@
 import { Search } from 'js-search';
 import simplify from 'simplify-path';
-import { get, set } from './Storage';
+import { Area, get, set } from './Storage';
 import { getPath, updatePath } from './drawing';
 import { highlight } from './highlight';
 import { load } from './load';
@@ -13,7 +13,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	let current = get('current');
 	let grid = get('grid');
 	let areas = get('areas');
-	let area = areas[current];
+	let area: Area;
 
 	let zoomEffective = 1;
 	const updateZoomEffective = () => {
@@ -110,6 +110,13 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		}, 2500);
 	};
 
+	const setArea = (key: string) => {
+		current = key;
+		area = areas[key];
+		selectAreas.value = key;
+		loadArea();
+	};
+
 	const loadArea = () => {
 		// populate area select
 		selectAreas.textContent = '';
@@ -174,14 +181,10 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		pushUndoRedo({
 			name: 'change area',
 			undo() {
-				current = areaOld;
-				area = areas[current];
-				loadArea();
+				setArea(areaOld);
 			},
 			redo() {
-				current = areaNew;
-				area = areas[current];
-				loadArea();
+				setArea(areaNew);
 			},
 		});
 	});
@@ -211,18 +214,14 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			name: 'create area',
 			undo() {
 				elOption.remove();
-				current = areaOld;
-				area = areas[current];
+				setArea(areaOld);
 				delete areas[areaNew];
 				loadArea();
 			},
 			redo() {
 				selectAreas.appendChild(elOption);
 				areas[areaNew] = areaObj;
-				selectAreas.value = areaNew;
-				current = areaNew;
-				area = areas[current];
-				loadArea();
+				setArea(areaNew);
 			},
 		});
 	});
@@ -264,20 +263,14 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		pushUndoRedo({
 			name: 'delete area',
 			undo() {
-				current = areaOld;
 				areas[areaOld] = areaObj;
 				selectAreas.insertBefore(elOption, selectAreas.children[idxOption]);
-				selectAreas.value = areaOld;
-				area = areas[areaOld];
-				loadArea();
+				setArea(areaOld);
 			},
 			redo() {
-				current = areaNew;
 				delete areas[areaOld];
 				elOption.remove();
-				selectAreas.value = areaNew;
-				area = areas[areaNew];
-				loadArea();
+				setArea(areaNew);
 			},
 		});
 	});
@@ -325,10 +318,8 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				typeof content.areas !== 'object'
 			)
 				throw new Error('invalid file');
-			current = content.current;
 			areas = content.areas;
-			area = areas[current];
-			loadArea();
+			setArea(content.current);
 			toast('imported');
 		} catch (err) {
 			error(err);
@@ -989,11 +980,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			btnFocus.textContent = '🔍';
 			btnFocus.addEventListener('click', () => {
 				const [a] = i.key.split('-');
-				if (current !== a) {
-					current = a;
-					area = areas[current];
-					loadArea();
-				}
+				if (current !== a) setArea(a);
 				focus(i.original.x, i.original.y);
 			});
 			li.appendChild(btnFocus);
@@ -1002,5 +989,5 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		});
 	});
 
-	loadArea();
+	setArea(current);
 })();
