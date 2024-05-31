@@ -587,6 +587,20 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		const stopMoving = () => {
 			window.removeEventListener('pointermove', move);
 			divMapContainer.style.cursor = cursorOld;
+			const elEnd = {
+				x: parseInt(element.style.left, 10),
+				y: parseInt(element.style.top, 10),
+			};
+
+			pushUndoRedo({
+				name: 'move',
+				undo() {
+					update(elStart.x, elStart.y);
+				},
+				redo() {
+					update(elEnd.x, elEnd.y);
+				},
+			});
 		};
 		window.addEventListener('pointermove', move);
 		window.addEventListener('pointerup', stopMoving, { once: true });
