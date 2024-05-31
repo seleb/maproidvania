@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="./assets/icon-B_Qb3hfy.png" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+  <meta name="theme-color" content="#000000">
+  <title>maproidvania</title>
+
+  <!-- GENERAL SEARCH INFO -->
+  <meta name="author" content="Sean S. LeBlanc" />
+  <meta name="copyright" content="Sean S. LeBlanc" />
+  <meta name="description" content="a mapping tool for playing metroidvanias" />
+  <link rel="canonical" href="https://seleb.github.io/mastodon-archive-search" />
+
+  <!-- OPENGRAPH TAGS -->
+  <meta property="og:title" content="maproidvania" />
+  <meta property="og:site_name" content="maproidvania" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://seleb.github.io/mastodon-archive-search" />
+
+  <!-- TWITTER CARD -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:creator" content="@SeanSLeBlanc">
+  <meta name="twitter:title" content="maproidvania" />
+  <meta name="twitter:description" content="a mapping tool for playing metroidvanias" />
+  <meta name="twitter:image"
+    content="https://raw.githubusercontent.com/seleb/mastodon-archive-search/main/src/assets/icon.png" />
+  <script type="module" crossorigin src="./assets/index-2cF-9IBa.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CzlT1YbA.css">
+</head>
+
+<body>
+  <div id="preloader" aria-busy="true"
+    style="display: flex; height: 100%; align-items: center; justify-content: center; text-align: center;">
+    Loading...
+    <noscript>You must enable javascript to use this app.</noscript>
+  </div>
+  <main>
+    <div id="about">
+      <h1>maproidvania</h1>
+      <p>a mapping tool for playing metroidvanias</p>
+      <div>
+        <span><a href="https://github.com/seleb/mastodon-archive-search/blob/main/CHANGELOG.md" target="_blank"
+            rel="noopener noreferrer">v1.0.0</a></span>
+        <span><a href="https://github.com/seleb/mastodon-archive-search" target="_blank"
+            rel="noopener noreferrer">source</a></span>
+        <span>made by <a href="https://seans.site" target="_blank" rel="noopener noreferrer">sean</a></span>
+      </div>
+    </div>
+    <button id="btn-about" title="about">?</button>
+
+    <div id="controls">
+      <div id="options-areas">
+        <select id="areas"></select>
+        <button type="button" id="btn-area-add" title="add area">➕</button>
+        <button type="button" id="btn-area-rename" title="rename area">🖋</button>
+        <button type="button" id="btn-area-delete" title="delete area">✖</button>
+        <hr />
+        <button id="btn-grid" title="grid settings">▦</button>
+        <hr />
+        <button type="button" id="btn-save" title="save to browser">💾</button>
+        <button type="button" id="btn-export" title="export to file">📩</button>
+        <button type="button" id="btn-import" title="import from file">📤</button>
+      </div>
+
+      <div id="options-tools">
+        <label title="select">🡴 <input id="btn-select" type="radio" name="tool" title="select" value="select"
+            checked /></label>
+        <label title="pan">🖐 <input id="btn-pan" type="radio" name="tool" value="pan" /></label>
+        <label title="text">ꕯ <input id="btn-text" type="radio" name="tool" value="text" /></label>
+
+        <hr />
+        <div id="options-colour">
+          <input type="radio" name="tool" value="#FF0000" title="red" />
+          <input type="radio" name="tool" value="#FF9900" title="orange" />
+          <input type="radio" name="tool" value="#FFFF00" title="yellow" />
+          <input type="radio" name="tool" value="#00FF99" title="green" />
+          <input type="radio" name="tool" value="#00FFFF" title="cyan" />
+          <input type="radio" name="tool" value="#0000FF" title="blue" />
+          <input type="radio" name="tool" value="#FF00FF" title="pink" />
+          <input type="radio" name="tool" value="#000000" title="black" />
+          <input type="radio" name="tool" value="#FFFFFF" title="white" />
+          <input id="stroke" type="range" title="stroke width" min="4" value="25" max="100" />
+        </div>
+      </div>
+
+      <div id="options-pin">
+        <label><input type="radio" name="tool" title="pin" value="📌" /></label>
+        <label><input type="radio" name="tool" title="star" value="⭐" /></label>
+        <label><input type="radio" name="tool" title="lock" value="🔒" /></label>
+        <label><input type="radio" name="tool" title="unlock" value="🔓" /></label>
+        <label><input type="radio" name="tool" title="gift" value="🎁" /></label>
+        <label><input type="radio" name="tool" title="key" value="🔑" /></label>
+        <label><input type="radio" name="tool" title="money" value="💰" /></label>
+        <label><input type="radio" name="tool" title="zap" value="⚡" /></label>
+        <label><input type="radio" name="tool" title="heart" value="💖" /></label>
+        <label><input type="radio" name="tool" title="?" value="❓" /></label>
+        <label><input type="radio" name="tool" title="!" value="❗" /></label>
+        <label><input type="radio" name="tool" title="x" value="❌" /></label>
+        <label><input type="radio" name="tool" title="check" value="✅" /></label>
+        <label><input type="radio" name="tool" title="cyclone" value="🌀" /></label>
+        <hr />
+        <label><input id="custom-pin" type="radio" name="tool" title="custom" value="" disabled /></label>
+        <input id="custom-pin-entry" type="text" title="custom pin entry" placeholder="Custom pin..." value="" />
+      </div>
+
+      <input id="search" type="search" placeholder="Search..." />
+      <ul id="search-results"></ul>
+    </div>
+
+    <div id="map-container">
+      <div id="map">
+        <div class="layer" id="images"></div>
+        <svg class="layer" id="drawings" xmlns="http://www.w3.org/2000/svg" width="1" height="1"></svg>
+        <div class="layer" id="pins"></div>
+        <div class="layer" id="text"></div>
+      </div>
+      <div id="cursor"></div>
+    </div>
+
+    <div id="context">
+      <button id="context-delete" title="delete">✖</button>
+      <textarea id="context-notes" title="delete" placeholder="Notes..."></textarea>
+      <ul id="context-images"></ul>
+    </div>
+
+    <ul id="toasts"></ul>
+  </main>
+</body>
+
+</html>
