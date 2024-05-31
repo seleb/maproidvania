@@ -157,7 +157,11 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		layerText.textContent = '';
 		area.text.forEach((p, idx) => {
 			const elText = document.createElement('div');
-			elText.contentEditable = 'plaintext-only';
+			try {
+				elText.contentEditable = 'plaintext-only';
+			} catch {
+				elText.contentEditable = 'true';
+			}
 			elText.style.top = `${p.y}px`;
 			elText.style.left = `${p.x}px`;
 			elText.style.fontSize = `${p.size * 100}%`;
@@ -826,7 +830,11 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			} else if (tool === 'text') {
 				event.preventDefault();
 				const elText = document.createElement('div');
-				elText.contentEditable = 'plaintext-only';
+				try {
+					elText.contentEditable = 'plaintext-only';
+				} catch {
+					elText.contentEditable = 'true';
+				}
 				const p = getPosMouseMap();
 				elText.style.top = `${p.y}px`;
 				elText.style.left = `${p.x}px`;
@@ -929,7 +937,8 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		if (
 			active?.tagName === 'TEXTAREA' ||
 			active?.tagName === 'INPUT' ||
-			active?.contentEditable === 'plaintext-only'
+			active?.contentEditable === 'plaintext-only' ||
+			active?.contentEditable === 'true'
 		) {
 			// ctrl+(-/=) to change text size
 			if (
