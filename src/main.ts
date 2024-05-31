@@ -186,20 +186,20 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		});
 	});
 	btnAreaAdd.addEventListener('click', () => {
-		const key = window.prompt(
+		const areaNew = window.prompt(
 			'new area name?',
 			`area ${Object.keys(areas).length}`
 		);
-		if (!key) return;
-		if (areas[key]) {
+		if (!areaNew) return;
+		if (areas[areaNew]) {
 			window.alert('error: an area with that name already exists!');
 			return;
 		}
+		const areaOld = current;
 		const elOption = document.createElement('option');
-		elOption.value = key;
-		elOption.textContent = key;
-		selectAreas.appendChild(elOption);
-		areas[key] = {
+		elOption.value = areaNew;
+		elOption.textContent = areaNew;
+		const areaObj = {
 			offset: { x: 0, y: 0 },
 			zoom: 1,
 			images: {},
@@ -207,8 +207,24 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			pins: [],
 			text: [],
 		};
-		selectAreas.value = key;
-		selectAreas.dispatchEvent(new Event('change'));
+		pushUndoRedo({
+			name: 'create area',
+			undo() {
+				elOption.remove();
+				current = areaOld;
+				area = areas[current];
+				delete areas[areaNew];
+				loadArea();
+			},
+			redo() {
+				selectAreas.appendChild(elOption);
+				areas[areaNew] = areaObj;
+				selectAreas.value = areaNew;
+				current = areaNew;
+				area = areas[current];
+				loadArea();
+			},
+		});
 	});
 	btnAreaRename.addEventListener('click', () => {
 		const key = window.prompt('rename area', current);
