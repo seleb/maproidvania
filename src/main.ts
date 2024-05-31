@@ -7,7 +7,7 @@ import { load } from './load';
 import { error } from './logger';
 import { onPasteImage } from './onPaste';
 import { save } from './save';
-import { redo, undo } from './undo-redo';
+import { pushUndoRedo, redo, undo } from './undo-redo';
 
 (async () => {
 	let current = get('current');
@@ -169,9 +169,21 @@ import { redo, undo } from './undo-redo';
 	});
 
 	selectAreas.addEventListener('change', () => {
-		current = selectAreas.value;
-		area = areas[current];
-		loadArea();
+		const areaOld = current;
+		const areaNew = selectAreas.value;
+		pushUndoRedo({
+			name: 'change area',
+			undo() {
+				current = areaOld;
+				area = areas[current];
+				loadArea();
+			},
+			redo() {
+				current = areaNew;
+				area = areas[current];
+				loadArea();
+			},
+		});
 	});
 	btnAreaAdd.addEventListener('click', () => {
 		const key = window.prompt(
