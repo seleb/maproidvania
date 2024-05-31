@@ -256,7 +256,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			return;
 		}
 		if (!window.confirm('delete area?')) return;
-		const areaNew = Object.keys(areas)[0];
+		const areaNew = Object.keys(areas).filter((i) => i !== areaOld)[0];
 		const areaObj = areas[areaOld];
 		const elOption = selectAreas.selectedOptions[0];
 		const idxOption = selectAreas.selectedIndex;
