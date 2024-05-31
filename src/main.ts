@@ -972,8 +972,20 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			selected &&
 			selectedType === 'image'
 		) {
-			delete area.images[`${selected.dataset.x}|${selected.dataset.y}`];
-			updateGrid();
+			const key = `${selected.dataset.x}|${selected.dataset.y}`;
+			const img = area.images[key];
+
+			pushUndoRedo({
+				name: 'delete image',
+				undo() {
+					area.images[key] = img;
+					updateGrid();
+				},
+				redo() {
+					delete area.images[key];
+					updateGrid();
+				},
+			});
 		}
 		// delete drawing
 		if (
