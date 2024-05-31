@@ -334,9 +334,23 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				typeof content.areas !== 'object'
 			)
 				throw new Error('invalid file');
-			areas = content.areas;
-			setArea(content.current);
+			const areasOld = areas;
+			const areasNew = content.areas;
+			const areaOld = current;
+			const areaNew = content.current;
 			toast('imported');
+
+			pushUndoRedo({
+				name: 'import',
+				undo() {
+					areas = areasOld;
+					setArea(areaOld);
+				},
+				redo() {
+					areas = areasNew;
+					setArea(areaNew);
+				},
+			});
 		} catch (err) {
 			error(err);
 			window.alert(`error: failed to import - ${err.message}`);
