@@ -342,6 +342,8 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				typeof content.areas !== 'object'
 			)
 				throw new Error('invalid file');
+			const gridOld = grid;
+			const gridNew = content.grid;
 			const areasOld = areas;
 			const areasNew = content.areas;
 			const areaOld = current;
@@ -351,10 +353,12 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			pushUndoRedo({
 				name: 'import',
 				undo() {
+					grid = gridOld;
 					areas = areasOld;
 					setArea(areaOld);
 				},
 				redo() {
+					grid = gridNew;
 					areas = areasNew;
 					setArea(areaNew);
 				},
