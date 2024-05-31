@@ -289,9 +289,24 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			grid[1].toString(10)
 		);
 		if (!h) return;
-		grid[0] = parseInt(w, 10);
-		grid[1] = parseInt(h, 10);
-		updateGrid();
+		const wOld = grid[0];
+		const hOld = grid[1];
+		const wNew = parseInt(w, 10);
+		const hNew = parseInt(h, 10);
+
+		pushUndoRedo({
+			name: 'resize grid',
+			undo() {
+				grid[0] = wOld;
+				grid[1] = hOld;
+				updateGrid();
+			},
+			redo() {
+				grid[0] = wNew;
+				grid[1] = hNew;
+				updateGrid();
+			},
+		});
 	});
 
 	btnSave.addEventListener('click', async () => {
