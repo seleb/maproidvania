@@ -447,15 +447,27 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			updatePath(path, points, size);
 		};
 		draw(event);
-		function stopDrawing() {
+		const stopDrawing = () => {
 			window.removeEventListener('pointermove', draw);
-			area.drawings.push({
+			updatePath(path, points, size);
+			const drawing = {
 				points,
 				size,
 				colour,
+			};
+
+			pushUndoRedo({
+				name: 'draw',
+				undo() {
+					path.remove();
+					area.drawings.pop();
+				},
+				redo() {
+					layerDrawings.appendChild(path);
+					area.drawings.push(drawing);
+				},
 			});
-			updatePath(path, points, size);
-		}
+		};
 		window.addEventListener('pointermove', draw);
 		window.addEventListener('pointerup', stopDrawing, { once: true });
 	};
