@@ -7,7 +7,7 @@ type UndoRedo = {
 const stack: UndoRedo[] = [];
 let idx = -1;
 
-const maxUndos = 5;
+const maxUndos = 50;
 
 export function pushUndoRedo(command: UndoRedo) {
 	stack.splice(idx + 1, stack.length);
