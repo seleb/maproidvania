@@ -1,3 +1,11 @@
+## [1.2.2](https://github.com/seleb/maproidvania/compare/v1.2.1...v1.2.2) (2024-06-02)
+
+
+### Bug Fixes
+
+* improve tool selection ([8273ea7](https://github.com/seleb/maproidvania/commit/8273ea79602dc5139f369958a30c1b9b287af3b5))
+* taller notes ([371a392](https://github.com/seleb/maproidvania/commit/371a39210ea2ca15c179ed6aa8987f0719a2049c))
+
 ## [1.2.1](https://github.com/seleb/maproidvania/compare/v1.2.0...v1.2.1) (2024-06-02)
 
 
