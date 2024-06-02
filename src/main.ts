@@ -399,17 +399,47 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 
 	let tool = 'select';
 	let toolOption = '';
-	let lastColour = '';
-	let lastPin = '';
-
-	btnColours.forEach((i) => {
-		i.addEventListener('change', () => {
-			tool = 'draw';
-			lastColour = toolOption = i.value;
-			divCursor.style.setProperty('--colour', i.value);
+	let lastColour = Array.from(btnColours)[0].value;
+	let lastPin = Array.from(btnPins)[0].value;
+	const setTool = (newTool: string, newToolOption = '', updateUi = true) => {
+		tool = newTool;
+		toolOption = newToolOption;
+		if (tool === 'select') {
+			divCursor.textContent = '';
+			divCursor.className = 'select';
+			divMapContainer.style.cursor = 'auto';
+		} else if (tool === 'pan') {
+			divCursor.textContent = '';
+			divCursor.className = 'pan';
+			divMapContainer.style.cursor = 'grab';
+		} else if (tool === 'text') {
+			divCursor.textContent = 'Type here...';
+			divCursor.className = 'text';
+			divMapContainer.style.cursor = 'text';
+		} else if (tool === 'pin') {
+			lastPin = toolOption;
+			divCursor.textContent = toolOption;
+			divCursor.className = 'pin';
+			divMapContainer.style.cursor = 'none';
+		} else if (tool === 'draw') {
+			lastColour = toolOption;
+			divCursor.style.setProperty('--colour', toolOption);
 			divCursor.textContent = '';
 			divCursor.className = 'draw';
 			divMapContainer.style.cursor = 'crosshair';
+		}
+		if (updateUi) {
+			document
+				.querySelector<HTMLInputElement>(
+					`input[type="radio"][name="tool"][value="${toolOption || tool}"]`
+				)
+				?.click();
+		}
+	};
+
+	btnColours.forEach((i) => {
+		i.addEventListener('change', () => {
+			setTool('draw', i.value, false);
 		});
 	});
 
@@ -420,33 +450,17 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	});
 	btnPins.forEach((i) => {
 		i.addEventListener('change', () => {
-			tool = 'pin';
-			lastPin = toolOption = i.value;
-			divCursor.textContent = i.value;
-			divCursor.className = 'pin';
-			divMapContainer.style.cursor = 'none';
+			setTool('pin', i.value, false);
 		});
 	});
 	btnSelect.addEventListener('change', () => {
-		tool = 'select';
-		toolOption = '';
-		divCursor.textContent = '';
-		divCursor.className = 'select';
-		divMapContainer.style.cursor = 'auto';
+		setTool('select', undefined, false);
 	});
 	btnPan.addEventListener('change', () => {
-		tool = 'pan';
-		toolOption = '';
-		divCursor.textContent = '';
-		divCursor.className = 'pan';
-		divMapContainer.style.cursor = 'grab';
+		setTool('pan', undefined, false);
 	});
 	btnText.addEventListener('change', () => {
-		tool = 'text';
-		toolOption = '';
-		divCursor.textContent = 'Type here...';
-		divCursor.className = 'text';
-		divMapContainer.style.cursor = 'text';
+		setTool('text', undefined, false);
 	});
 
 	rangeStroke.addEventListener('input', () => {
@@ -1108,44 +1122,36 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			panning = true;
 			const oldTool = tool;
 			const oldToolOption = toolOption;
-			btnPan.click();
+			setTool('pan');
 			window.addEventListener('keyup', (event) => {
 				if (event.key !== ' ') return;
 				panning = false;
-				document
-					.querySelector<HTMLInputElement>(
-						`input[name="tool"][value="${oldToolOption}"], input[name="tool"][value="${oldTool}"]`
-					)
-					?.click();
+				setTool(oldTool, oldToolOption);
 			});
 		}
 
 		// q for select
 		if (event.key === 'q') {
 			event.preventDefault();
-			btnSelect.click();
+			setTool('select');
 			return;
 		}
 		// t for text
 		if (event.key === 't') {
 			event.preventDefault();
-			btnText.click();
+			setTool('text');
 			return;
 		}
 		// b for drawing
 		if (event.key === 'b') {
 			event.preventDefault();
-			(
-				Array.from(btnColours).find((i) => i === lastColour) || btnColours[0]
-			).click();
+			setTool('draw', lastColour);
 			return;
 		}
 		// p for pin
 		if (event.key === 'p') {
 			event.preventDefault();
-			(
-				Array.from(btnPins).find((i) => i.value === lastPin) || btnPins[0]
-			).click();
+			setTool('pin', lastPin);
 			return;
 		}
 	});
