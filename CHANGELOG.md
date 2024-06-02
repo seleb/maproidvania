@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/seleb/maproidvania/compare/v1.2.0...v1.2.1) (2024-06-02)
+
+
+### Bug Fixes
+
+* wider notes ([3830459](https://github.com/seleb/maproidvania/commit/38304598677362f990d1e483a3ac8c220cd328bd))
+
 # [1.2.0](https://github.com/seleb/maproidvania/compare/v1.1.0...v1.2.0) (2024-06-02)
 
 
