@@ -1,6 +1,7 @@
 import { Search } from 'js-search';
 import simplify from 'simplify-path';
 import { Area, get, set } from './Storage';
+import { dirty } from './dirty';
 import { getPath, updatePath } from './drawing';
 import { highlight } from './highlight';
 import { load } from './load';
@@ -171,12 +172,14 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			elText.addEventListener('input', () => {
 				area.text[parseInt(elText.dataset.idx || '', 10)].text =
 					elText.textContent || '';
+				dirty();
 			});
 			elText.addEventListener('blur', () => {
 				if (!elText.textContent?.trim()) {
 					area.text.splice(parseInt(elText.dataset.idx || '', 10), 1);
 					updateIdxs(elText);
 					elText.remove();
+					dirty();
 				}
 			});
 		});
@@ -230,11 +233,13 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				delete areas[areaNew];
 				updateAreaSelect();
 				setArea(areaOld);
+				dirty();
 			},
 			redo() {
 				areas[areaNew] = areaObj;
 				updateAreaSelect();
 				setArea(areaNew);
+				dirty();
 			},
 		});
 	});
@@ -251,6 +256,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				current = areaOld;
 				selectAreas.selectedOptions[0].value =
 					selectAreas.selectedOptions[0].textContent = areaOld;
+				dirty();
 			},
 			redo() {
 				areas[areaNew] = areas[areaOld];
@@ -258,6 +264,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				current = areaNew;
 				selectAreas.selectedOptions[0].value =
 					selectAreas.selectedOptions[0].textContent = areaNew;
+				dirty();
 			},
 		});
 	});
@@ -279,11 +286,13 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				areas[areaOld] = areaObj;
 				selectAreas.insertBefore(elOption, selectAreas.children[idxOption]);
 				setArea(areaOld);
+				dirty();
 			},
 			redo() {
 				delete areas[areaOld];
 				elOption.remove();
 				setArea(areaNew);
+				dirty();
 			},
 		});
 	});
@@ -312,11 +321,13 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				grid[0] = wOld;
 				grid[1] = hOld;
 				updateGrid();
+				dirty();
 			},
 			redo() {
 				grid[0] = wNew;
 				grid[1] = hNew;
 				updateGrid();
+				dirty();
 			},
 		});
 	});
@@ -326,12 +337,14 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		await set('current', current);
 		await set('areas', areas);
 		toast('saved');
+		dirty(false);
 	});
 	btnExport.addEventListener('click', async () => {
 		try {
 			const data = JSON.stringify({ grid, current, areas }, undefined, '\t');
 			await save(data);
 			toast('exported');
+			dirty(false);
 		} catch (err) {
 			error(err);
 			window.alert(`error: failed to export - ${err.message}`);
@@ -360,11 +373,13 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 					grid = gridOld;
 					areas = areasOld;
 					setArea(areaOld);
+					dirty();
 				},
 				redo() {
 					grid = gridNew;
 					areas = areasNew;
 					setArea(areaNew);
+					dirty();
 				},
 			});
 		} catch (err) {
@@ -477,10 +492,12 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				undo() {
 					area.drawings.pop();
 					updateDrawings();
+					dirty();
 				},
 				redo() {
 					area.drawings.push(drawing);
 					updateDrawings();
+					dirty();
 				},
 			});
 		};
@@ -611,9 +628,11 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 					name: 'move',
 					undo() {
 						update(elStart.x, elStart.y);
+						dirty();
 					},
 					redo() {
 						update(elEnd.x, elEnd.y);
+						dirty();
 					},
 				});
 			}
@@ -657,10 +676,12 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 					undo() {
 						pin.images = imagesOld;
 						updateContextImages(el);
+						dirty();
 					},
 					redo() {
 						pin.images = imagesNew;
 						updateContextImages(el);
+						dirty();
 					},
 				});
 			});
@@ -749,11 +770,13 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				area.pins.splice(idx, 0, pin);
 				updatePins();
 				contextSelect(layerPins.children[idx], 'pin');
+				dirty();
 			},
 			redo() {
 				area.pins.splice(idx, 1);
 				updatePins();
 				contextDeselect();
+				dirty();
 			},
 		});
 	});
@@ -761,6 +784,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		if (!selected) return;
 		const pin = area.pins[parseInt(selected.dataset.idx || '', 10)];
 		pin.notes = textareaNotes.value;
+		dirty();
 	});
 
 	divMapContainer.addEventListener('pointerdown', (event) => {
@@ -827,12 +851,14 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 						area.pins.pop();
 						elPin.remove();
 						updateMap();
+						dirty();
 					},
 					redo() {
 						layerPins.appendChild(elPin);
 						area.pins.push(pinObj);
 						updateMap();
 						contextSelect(elPin, 'pin');
+						dirty();
 					},
 				});
 			} else if (tool === 'draw') {
@@ -857,12 +883,14 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				elText.addEventListener('input', () => {
 					area.text[parseInt(elText.dataset.idx || '', 10)].text =
 						elText.textContent || '';
+					dirty();
 				});
 				elText.addEventListener('blur', () => {
 					if (!elText.textContent?.trim()) {
 						area.text.splice(parseInt(elText.dataset.idx || '', 10), 1);
 						updateIdxs(elText);
 						elText.remove();
+						dirty();
 					}
 				});
 				const textObj = {
@@ -877,11 +905,13 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 					undo() {
 						elText.remove();
 						area.text.pop();
+						dirty();
 					},
 					redo() {
 						layerText.appendChild(elText);
 						area.text.push(textObj);
 						elText.focus();
+						dirty();
 					},
 				});
 			}
@@ -906,10 +936,12 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			undo() {
 				pin.images = imagesOld;
 				updateContextImages(el);
+				dirty();
 			},
 			redo() {
 				pin.images = imagesNew;
 				updateContextImages(el);
+				dirty();
 			},
 		});
 	};
@@ -925,10 +957,12 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				if (imgOld) area.images[key] = imgOld;
 				else delete area.images[key];
 				updateGrid();
+				dirty();
 			},
 			redo() {
 				area.images[key] = img;
 				updateGrid();
+				dirty();
 			},
 		});
 	};
@@ -962,6 +996,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				const text = area.text[parseInt(active.dataset.idx || '', 10)];
 				text.size *= 2;
 				active.style.fontSize = `${text.size * 100}%`;
+				dirty();
 			} else if (
 				event.ctrlKey &&
 				event.key === '-' &&
@@ -971,6 +1006,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				const text = area.text[parseInt(active.dataset.idx || '', 10)];
 				text.size /= 2;
 				active.style.fontSize = `${text.size * 100}%`;
+				dirty();
 			}
 			return;
 		}
@@ -1005,10 +1041,12 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				undo() {
 					area.images[key] = img;
 					updateGrid();
+					dirty();
 				},
 				redo() {
 					delete area.images[key];
 					updateGrid();
+					dirty();
 				},
 			});
 		}
@@ -1028,10 +1066,12 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				undo() {
 					area.drawings.splice(idx, 0, drawing);
 					updateDrawings();
+					dirty();
 				},
 				redo() {
 					area.drawings.splice(idx, 1);
 					updateDrawings();
+					dirty();
 				},
 			});
 		}
