@@ -830,9 +830,9 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				startDragging(event);
 			} else if (tool === 'pin') {
 				event.preventDefault();
-				const pin = toolOption;
+				const pinType = toolOption;
 				const elPin = document.createElement('div');
-				elPin.textContent = pin;
+				elPin.textContent = pinType;
 				const p = getPosMouseMap();
 				elPin.style.top = `${p.y}px`;
 				elPin.style.left = `${p.x}px`;
@@ -841,7 +841,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				const pinObj = {
 					x: p.x,
 					y: p.y,
-					type: toolOption,
+					type: pinType,
 					notes: '',
 					images: '',
 				};
