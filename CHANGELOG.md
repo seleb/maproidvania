@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/seleb/maproidvania/compare/v1.1.0...v1.2.0) (2024-06-02)
+
+
+### Features
+
+* hotkeys for select/text/draw/pin ([fd598e1](https://github.com/seleb/maproidvania/commit/fd598e16ef9477381b7513ecf76c115ab4ab8543))
+
 # [1.1.0](https://github.com/seleb/maproidvania/compare/v1.0.3...v1.1.0) (2024-06-02)
 
 
