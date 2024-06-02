@@ -647,10 +647,22 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			btnDelete.textContent = '✖';
 			btnDelete.addEventListener('click', () => {
 				elLi.remove();
-				pin.images = Array.from(ulImages.querySelectorAll('img'))
+				const imagesOld = pin.images;
+				const imagesNew = Array.from(ulImages.querySelectorAll('img'))
 					.map((i) => i.src)
 					.join('|');
-				updateContextImages(el);
+
+				pushUndoRedo({
+					name: 'delete image in pin',
+					undo() {
+						pin.images = imagesOld;
+						updateContextImages(el);
+					},
+					redo() {
+						pin.images = imagesNew;
+						updateContextImages(el);
+					},
+				});
 			});
 
 			elLi.appendChild(btnOpen);
