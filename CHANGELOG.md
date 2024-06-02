@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/seleb/maproidvania/compare/v1.0.3...v1.1.0) (2024-06-02)
+
+
+### Bug Fixes
+
+* missing undo/redo on deleting pin image ([f9db72b](https://github.com/seleb/maproidvania/commit/f9db72b4f1ea2f7af321d4d1ef5017e7c7654cb3))
+
+
+### Features
+
+* warn about unsaved changes ([bb2d001](https://github.com/seleb/maproidvania/commit/bb2d00196ef9235b836952ff3455a75b3c188fed))
+
 ## [1.0.3](https://github.com/seleb/maproidvania/compare/v1.0.2...v1.0.3) (2024-05-31)
 
 
