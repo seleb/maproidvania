@@ -399,11 +399,13 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 
 	let tool = 'select';
 	let toolOption = '';
+	let lastColour = '';
+	let lastPin = '';
 
 	btnColours.forEach((i) => {
 		i.addEventListener('change', () => {
 			tool = 'draw';
-			toolOption = i.value;
+			lastColour = toolOption = i.value;
 			divCursor.style.setProperty('--colour', i.value);
 			divCursor.textContent = '';
 			divCursor.className = 'draw';
@@ -419,7 +421,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	btnPins.forEach((i) => {
 		i.addEventListener('change', () => {
 			tool = 'pin';
-			toolOption = i.value;
+			lastPin = toolOption = i.value;
 			divCursor.textContent = i.value;
 			divCursor.className = 'pin';
 			divMapContainer.style.cursor = 'none';
@@ -1116,6 +1118,35 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 					)
 					?.click();
 			});
+		}
+
+		// q for select
+		if (event.key === 'q') {
+			event.preventDefault();
+			btnSelect.click();
+			return;
+		}
+		// t for text
+		if (event.key === 't') {
+			event.preventDefault();
+			btnText.click();
+			return;
+		}
+		// b for drawing
+		if (event.key === 'b') {
+			event.preventDefault();
+			(
+				Array.from(btnColours).find((i) => i === lastColour) || btnColours[0]
+			).click();
+			return;
+		}
+		// p for pin
+		if (event.key === 'p') {
+			event.preventDefault();
+			(
+				Array.from(btnPins).find((i) => i.value === lastPin) || btnPins[0]
+			).click();
+			return;
 		}
 	});
 
