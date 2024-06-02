@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/seleb/maproidvania/compare/v1.2.2...v1.3.0) (2024-06-02)
+
+
+### Features
+
+* add door to default pins ([71cb6c0](https://github.com/seleb/maproidvania/commit/71cb6c0fc40916f69d86d03374e39bf09b36278a))
+
 ## [1.2.2](https://github.com/seleb/maproidvania/compare/v1.2.1...v1.2.2) (2024-06-02)
 
 
