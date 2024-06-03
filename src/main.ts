@@ -117,6 +117,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		current = key;
 		area = areas[key];
 		selectAreas.value = key;
+		contextDeselect();
 		loadArea();
 	};
 
