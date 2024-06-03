@@ -60,6 +60,8 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	const btnDelete =
 		document.querySelector<HTMLButtonElement>('#context-delete');
 	const inputPinType = document.querySelector<HTMLInputElement>('#context-pin');
+	const datalistPinType =
+		document.querySelector<HTMLDataListElement>('#context-datalist');
 	const textareaNotes =
 		document.querySelector<HTMLTextAreaElement>('#context-notes');
 	const ulImages = document.querySelector<HTMLUListElement>('#context-images');
@@ -95,6 +97,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		!btnCustomPinEntry ||
 		!divContext ||
 		!btnDelete ||
+		!datalistPinType ||
 		!inputPinType ||
 		!textareaNotes ||
 		!ulImages ||
@@ -1245,5 +1248,10 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		});
 	});
 
+	Array.from(btnPins).forEach((i) => {
+		const option = document.createElement('option');
+		option.value = i.value;
+		datalistPinType.appendChild(option);
+	});
 	setArea(current);
 })();
