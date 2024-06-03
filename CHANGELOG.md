@@ -1,3 +1,11 @@
+## [1.4.1](https://github.com/seleb/maproidvania/compare/v1.4.0...v1.4.1) (2024-06-03)
+
+
+### Bug Fixes
+
+* deselect when changing areas ([a01e9e3](https://github.com/seleb/maproidvania/commit/a01e9e3703c835a9e21f74085af279b01a4b8665))
+* don't change area if it's the same one ([0b260ae](https://github.com/seleb/maproidvania/commit/0b260ae44c70c7dc7d66afa5f2c588c7560e296f))
+
 # [1.4.0](https://github.com/seleb/maproidvania/compare/v1.3.0...v1.4.0) (2024-06-03)
 
 
