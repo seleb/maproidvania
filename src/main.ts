@@ -200,6 +200,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	selectAreas.addEventListener('change', () => {
 		const areaOld = current;
 		const areaNew = selectAreas.value;
+		if (areaOld === areaNew) return;
 		pushUndoRedo({
 			name: 'change area',
 			undo() {
