@@ -141,7 +141,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		area.pins.forEach((p, idx) => {
 			const pin = p.type;
 			const elPin = document.createElement('div');
-			elPin.textContent = pin;
+			elPin.textContent = pin || '???';
 			elPin.style.top = `${p.y}px`;
 			elPin.style.left = `${p.x}px`;
 			layerPins.appendChild(elPin);
