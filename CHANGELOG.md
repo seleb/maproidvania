@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/seleb/maproidvania/compare/v1.4.1...v1.4.2) (2024-06-03)
+
+
+### Bug Fixes
+
+* deselect pin when focusing search result ([aacabc7](https://github.com/seleb/maproidvania/commit/aacabc79d429b3dbd2e4dbed513d652b5d872a28))
+
 ## [1.4.1](https://github.com/seleb/maproidvania/compare/v1.4.0...v1.4.1) (2024-06-03)
 
 
