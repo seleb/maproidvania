@@ -807,7 +807,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	inputPinType.addEventListener('input', () => {
 		if (!selected) return;
 		const pin = area.pins[parseInt(selected.dataset.idx || '', 10)];
-		pin.type = inputPinType.value;
+		pin.type = inputPinType.value || '???';
 		selected.textContent = pin.type;
 		dirty();
 	});
