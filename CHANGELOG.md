@@ -1,3 +1,15 @@
+# [1.4.0](https://github.com/seleb/maproidvania/compare/v1.3.0...v1.4.0) (2024-06-03)
+
+
+### Bug Fixes
+
+* fallback for no pin type ([45f0734](https://github.com/seleb/maproidvania/commit/45f0734b46adae8714aefb822a76a28ff86d6332))
+
+
+### Features
+
+* edit pin type from context menu ([968d121](https://github.com/seleb/maproidvania/commit/968d1213ccf49c81533ed2680e11a9af1f80d290))
+
 # [1.3.0](https://github.com/seleb/maproidvania/compare/v1.2.2...v1.3.0) (2024-06-02)
 
 
