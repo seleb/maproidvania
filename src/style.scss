@@ -414,6 +414,7 @@ section {
 		#pins {
 			>* {
 				border-radius: 50%;
+				white-space: pre;
 			}
 
 			>.selected {
@@ -490,6 +491,15 @@ section {
 	border-radius: 0.25rem;
 	border: solid 1px var(--dark);
 	box-shadow: 0.25rem 0.25rem 0.5rem black;
+
+	#context-top {
+		display: flex;
+		margin-bottom: 0.5rem;
+
+		#context-pin {
+			flex: auto;
+		}
+	}
 
 	&:not(.show) {
 		display: none;

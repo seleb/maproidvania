@@ -59,6 +59,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	const divContext = document.querySelector<HTMLDivElement>('#context');
 	const btnDelete =
 		document.querySelector<HTMLButtonElement>('#context-delete');
+	const inputPinType = document.querySelector<HTMLInputElement>('#context-pin');
 	const textareaNotes =
 		document.querySelector<HTMLTextAreaElement>('#context-notes');
 	const ulImages = document.querySelector<HTMLUListElement>('#context-images');
@@ -94,6 +95,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		!btnCustomPinEntry ||
 		!divContext ||
 		!btnDelete ||
+		!inputPinType ||
 		!textareaNotes ||
 		!ulImages ||
 		!inputSearch ||
@@ -724,6 +726,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			divContext.classList.add('show');
 			const r = selected.getBoundingClientRect();
 			selected.classList.add('selected');
+			inputPinType.value = pin.type || '???';
 			textareaNotes.value = pin.notes || '';
 			updateContextImages(el);
 			divContext.style.top = `${
@@ -795,6 +798,13 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				dirty();
 			},
 		});
+	});
+	inputPinType.addEventListener('input', () => {
+		if (!selected) return;
+		const pin = area.pins[parseInt(selected.dataset.idx || '', 10)];
+		pin.type = inputPinType.value;
+		selected.textContent = pin.type;
+		dirty();
 	});
 	textareaNotes.addEventListener('input', () => {
 		if (!selected) return;
