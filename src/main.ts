@@ -1234,6 +1234,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			btnFocus.title = 'focus';
 			btnFocus.textContent = '🔍';
 			btnFocus.addEventListener('click', () => {
+				contextDeselect();
 				const [a] = i.key.split('-');
 				if (current !== a) setArea(a);
 				focus(i.original.x, i.original.y);
