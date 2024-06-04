@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/seleb/maproidvania/compare/v1.5.0...v1.5.1) (2024-06-04)
+
+
+### Bug Fixes
+
+* area with `-` in name breaking search ([5d69021](https://github.com/seleb/maproidvania/commit/5d69021e6cea7a1d1e992a423506ca7bd8944953))
+
 # [1.5.0](https://github.com/seleb/maproidvania/compare/v1.4.2...v1.5.0) (2024-06-03)
 
 
