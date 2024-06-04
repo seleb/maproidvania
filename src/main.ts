@@ -1201,6 +1201,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	let search: Search;
 	type SearchItem = {
 		key: string;
+		area: string;
 		text: string;
 		original: ((typeof area)['pins'] | (typeof area)['text'])[number];
 	};
@@ -1211,12 +1212,14 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				(
 					pins.map((i, idx) => ({
 						key: `${area}-p-${idx}`,
+						area,
 						text: [area, i.type, i.notes].filter((i) => i).join(' > '),
 						original: i,
 					})) as SearchItem[]
 				).concat(
 					text.map((i, idx) => ({
 						key: `${area}-t-${idx}`,
+						area,
 						text: [area, i.text].filter((i) => i).join(' > '),
 						original: i,
 					}))
@@ -1238,7 +1241,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			btnFocus.textContent = '🔍';
 			btnFocus.addEventListener('click', () => {
 				contextDeselect();
-				const [a] = i.key.split('-');
+				const a = i.area;
 				if (current !== a) setArea(a);
 				focus(i.original.x, i.original.y);
 			});
