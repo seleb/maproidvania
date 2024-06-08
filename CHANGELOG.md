@@ -1,3 +1,15 @@
+# [2.0.0](https://github.com/seleb/maproidvania/compare/v1.6.1...v2.0.0) (2024-06-08)
+
+
+### Bug Fixes
+
+* try fixing save issue with `flatted` ([030b546](https://github.com/seleb/maproidvania/commit/030b54648c05f547b0d980a31b48fb7a4543585a))
+
+
+### BREAKING CHANGES
+
+* save file format changed
+
 ## [1.6.1](https://github.com/seleb/maproidvania/compare/v1.6.0...v1.6.1) (2024-06-08)
 
 
