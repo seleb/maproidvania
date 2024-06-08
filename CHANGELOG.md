@@ -1,3 +1,15 @@
+# [2.1.0](https://github.com/seleb/maproidvania/compare/v2.0.2...v2.1.0) (2024-06-08)
+
+
+### Bug Fixes
+
+* handle import cancel ([d1242c6](https://github.com/seleb/maproidvania/commit/d1242c686fb1bad7c0bb72d72f3d3e5d87424a76))
+
+
+### Features
+
+* blocking overlay while saving/exporting/importing ([131bacd](https://github.com/seleb/maproidvania/commit/131bacdc58c2f735132b017ff96107db1ef5c985))
+
 ## [2.0.2](https://github.com/seleb/maproidvania/compare/v2.0.1...v2.0.2) (2024-06-08)
 
 

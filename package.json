@@ -1,7 +1,7 @@
 {
 	"private": true,
 	"name": "maproidvania",
-	"version": "2.0.2",
+	"version": "2.1.0",
 	"description": "a mapping tool for playing metroidvanias",
 	"author": "Sean S. LeBlanc <sean.s.leblanc@gmail.com>",
 	"license": "MIT",
