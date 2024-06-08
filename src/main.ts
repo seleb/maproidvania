@@ -470,12 +470,13 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		setTool('text', undefined, false);
 	});
 
-	rangeStroke.addEventListener('input', () => {
+	const updateBrushSize = () => {
 		divCursor.style.setProperty(
 			'--size',
 			`${parseInt(rangeStroke.value, 10)}px`
 		);
-	});
+	};
+	rangeStroke.addEventListener('input', updateBrushSize);
 
 	const startDrawing = (event: PointerEvent, colour: string) => {
 		const size = parseFloat(rangeStroke.value) / (zoomEffective * 2);
@@ -1260,4 +1261,5 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		datalistPinType.appendChild(option);
 	});
 	setArea(current);
+	updateBrushSize();
 })();
