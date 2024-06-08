@@ -1194,7 +1194,10 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 
 	// search
 	const focus = (x: number, y: number) => {
-		area.offset.x = x * zoomEffective - divMapContainer.clientWidth / 2;
+		area.offset.x =
+			x * zoomEffective -
+			divMapContainer.clientWidth / 2 -
+			ulSearch.clientWidth / 2;
 		area.offset.y = y * zoomEffective - divMapContainer.clientHeight / 2;
 		updateMap();
 	};
