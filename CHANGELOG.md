@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/seleb/maproidvania/compare/v2.0.1...v2.0.2) (2024-06-08)
+
+
+### Bug Fixes
+
+* decode file iteratively to fix memory limit issue ([e321a6d](https://github.com/seleb/maproidvania/commit/e321a6d787f31dbc3edc0c20b352a2e3deab57b0))
+
 ## [2.0.1](https://github.com/seleb/maproidvania/compare/v2.0.0...v2.0.1) (2024-06-08)
 
 
