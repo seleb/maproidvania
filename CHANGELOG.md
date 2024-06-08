@@ -1,3 +1,11 @@
+## [2.0.1](https://github.com/seleb/maproidvania/compare/v2.0.0...v2.0.1) (2024-06-08)
+
+
+### Bug Fixes
+
+* try fixing save issue with `flat` ([17c5637](https://github.com/seleb/maproidvania/commit/17c56377a7de523d450c7fb69f4cec891bfe3287))
+* write each entry to file handle separately ([354de23](https://github.com/seleb/maproidvania/commit/354de23adeb023c041e3dd3feb989bafc9d7ccb4))
+
 # [2.0.0](https://github.com/seleb/maproidvania/compare/v1.6.1...v2.0.0) (2024-06-08)
 
 
