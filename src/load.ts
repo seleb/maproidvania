@@ -1,4 +1,4 @@
-import { parse } from 'flatted';
+import { unflatten } from 'flat';
 
 export function load(): Promise<string> {
 	return new Promise<string>((r, reject) => {
@@ -14,7 +14,11 @@ export function load(): Promise<string> {
 			reader.readAsText(file, 'UTF-8');
 
 			reader.onload = () => {
-				r(parse(reader.result?.toString() || ''));
+				r(
+					unflatten(
+						Object.fromEntries(JSON.parse(reader.result?.toString() || ''))
+					)
+				);
 			};
 			reader.onerror = reject;
 		};

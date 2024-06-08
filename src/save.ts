@@ -1,4 +1,4 @@
-import { stringify } from 'flatted';
+import { flatten } from 'flat';
 
 export async function save(data: unknown) {
 	if (!('showSaveFilePicker' in window)) {
@@ -16,6 +16,6 @@ export async function save(data: unknown) {
 	};
 	const handle: FileSystemFileHandle = await window.showSaveFilePicker(options);
 	const writable = await handle.createWritable();
-	await writable.write(stringify(data));
+	await writable.write(JSON.stringify(Object.entries(flatten(data))));
 	await writable.close();
 }
