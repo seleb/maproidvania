@@ -1249,6 +1249,10 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 				if (current !== a) setArea(a);
 				focus(i.original.x, i.original.y);
 			});
+			btnFocus.addEventListener('dblclick', () => {
+				area.zoom = 1;
+				updateZoomEffective();
+			});
 			li.appendChild(btnFocus);
 			li.appendChild(span);
 			ulSearch.appendChild(li);
