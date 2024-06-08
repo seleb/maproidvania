@@ -36,6 +36,9 @@ export function load(): Promise<string> {
 			};
 			reader.readAsArrayBuffer(file);
 		};
+		input.oncancel = () => {
+			r('');
+		};
 
 		input.click();
 	});
