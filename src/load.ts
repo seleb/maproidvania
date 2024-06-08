@@ -7,20 +7,34 @@ export function load(): Promise<string> {
 
 		input.onchange = () => {
 			const file = input.files?.[0];
-			if (!file) return;
+			if (!file) return r('');
 
-			// setting up the reader
 			const reader = new FileReader();
-			reader.readAsText(file, 'UTF-8');
-
 			reader.onload = () => {
-				r(
-					unflatten(
-						Object.fromEntries(JSON.parse(reader.result?.toString() || ''))
-					)
-				);
+				const buffer = reader.result as ArrayBuffer;
+				const decoder = new TextDecoder('utf-8');
+				let string = '';
+				const result = [];
+				const stride = 100000;
+				for (let i = 0; i < buffer.byteLength; i += stride) {
+					string += decoder.decode(
+						buffer.slice(i, Math.min(buffer.byteLength, i + stride))
+					);
+					while (string.includes(',\n')) {
+						let [a, ...b] = string.split(',\n');
+						string = b.join(',\n');
+						a = a.replace(/^\[\n/, '');
+						a = a.replace(/^\]/, '');
+						if (a === '[' || a === ']') continue;
+						result.push(JSON.parse(a));
+					}
+				}
+				r(unflatten(Object.fromEntries(result)));
 			};
-			reader.onerror = reject;
+			reader.onerror = (event) => {
+				reject(event);
+			};
+			reader.readAsArrayBuffer(file);
 		};
 
 		input.click();
