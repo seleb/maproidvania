@@ -478,7 +478,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	});
 
 	const startDrawing = (event: PointerEvent, colour: string) => {
-		const size = parseFloat(rangeStroke.value) / zoomEffective;
+		const size = parseFloat(rangeStroke.value) / (zoomEffective * 2);
 		const path = getPath({ points: [], colour, size });
 		layerDrawings.appendChild(path);
 		let points: [number, number][] = [];
