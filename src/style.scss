@@ -556,3 +556,28 @@ section {
 		}
 	}
 }
+
+
+@keyframes fadein {
+	from {
+		opacity: 0;
+	}
+}
+
+#overlay {
+	display: none;
+	position: fixed;
+	inset: 0;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	font-size: 200%;
+	background-color: var(--darker-t);
+	animation: fadein 0.5s ease-out backwards;
+	animation-delay: 100ms;
+	cursor: wait;
+
+	&.show {
+		display: flex;
+	}
+}

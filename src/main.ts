@@ -21,6 +21,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		zoomEffective = Math.pow(1.1, area.zoom);
 	};
 
+	const divOverlay = document.querySelector<HTMLDivElement>('#overlay');
 	const divControls = document.querySelector<HTMLDivElement>('#controls');
 	const divMapContainer =
 		document.querySelector<HTMLDivElement>('#map-container');
@@ -69,6 +70,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	const ulSearch = document.querySelector<HTMLUListElement>('#search-results');
 	const ulToasts = document.querySelector<HTMLUListElement>('#toasts');
 	if (
+		!divOverlay ||
 		!divControls ||
 		!divMapContainer ||
 		!divMap ||
@@ -106,6 +108,16 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		!ulToasts
 	)
 		throw new Error('Could not find elements');
+
+	const pause = (message: string) => {
+		divOverlay.textContent = message;
+		divOverlay.classList.add('show');
+	};
+
+	const unpause = () => {
+		divOverlay.textContent = '';
+		divOverlay.classList.remove('show');
+	};
 
 	const toast = (text: string) => {
 		const li = document.createElement('li');
@@ -340,13 +352,19 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	});
 
 	btnSave.addEventListener('click', async () => {
-		await set('grid', grid);
-		await set('current', current);
-		await set('areas', areas);
-		toast('saved');
-		dirty(false);
+		pause('saving...');
+		try {
+			await set('grid', grid);
+			await set('current', current);
+			await set('areas', areas);
+			toast('saved');
+			dirty(false);
+		} finally {
+			unpause();
+		}
 	});
 	btnExport.addEventListener('click', async () => {
+		pause('exporting...');
 		try {
 			await save({ grid, current, areas });
 			toast('exported');
@@ -354,11 +372,15 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		} catch (err) {
 			error(err);
 			window.alert(`error: failed to export - ${err.message}`);
+		} finally {
+			unpause();
 		}
 	});
 	btnImport.addEventListener('click', async () => {
+		pause('importing...');
 		try {
 			const content = await load();
+			if (!content) return;
 			if (
 				typeof content.current !== 'string' ||
 				typeof content.areas !== 'object'
@@ -390,6 +412,8 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		} catch (err) {
 			error(err);
 			window.alert(`error: failed to import - ${err.message}`);
+		} finally {
+			unpause();
 		}
 	});
 
