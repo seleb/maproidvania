@@ -16,6 +16,12 @@ export async function save(data: unknown) {
 	};
 	const handle: FileSystemFileHandle = await window.showSaveFilePicker(options);
 	const writable = await handle.createWritable();
-	await writable.write(JSON.stringify(Object.entries(flatten(data))));
+	const a = Object.entries(flatten(data));
+	await writable.write('[\n');
+	for (let i of a) {
+		await writable.write(JSON.stringify(i));
+		if (i !== a[a.length - 1]) await writable.write(',\n');
+	}
+	await writable.write('\n]');
 	await writable.close();
 }
