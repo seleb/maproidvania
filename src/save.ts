@@ -1,4 +1,6 @@
-export async function save(data: FileSystemWriteChunkType) {
+import { stringify } from 'flatted';
+
+export async function save(data: unknown) {
 	if (!('showSaveFilePicker' in window)) {
 		throw new Error('browser does not support native file system access');
 	}
@@ -14,6 +16,6 @@ export async function save(data: FileSystemWriteChunkType) {
 	};
 	const handle: FileSystemFileHandle = await window.showSaveFilePicker(options);
 	const writable = await handle.createWritable();
-	await writable.write(data);
+	await writable.write(stringify(data));
 	await writable.close();
 }

@@ -1,3 +1,5 @@
+import { parse } from 'flatted';
+
 export function load(): Promise<string> {
 	return new Promise<string>((r, reject) => {
 		const input = document.createElement('input');
@@ -12,7 +14,7 @@ export function load(): Promise<string> {
 			reader.readAsText(file, 'UTF-8');
 
 			reader.onload = () => {
-				r(reader.result?.toString() || '');
+				r(parse(reader.result?.toString() || ''));
 			};
 			reader.onerror = reject;
 		};

@@ -348,12 +348,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	});
 	btnExport.addEventListener('click', async () => {
 		try {
-			const data = `{ "grid": ${JSON.stringify(
-				grid
-			)}, "current": ${JSON.stringify(current)}, "areas": ${JSON.stringify(
-				areas
-			)} }`;
-			await save(data);
+			await save({ grid, current, areas });
 			toast('exported');
 			dirty(false);
 		} catch (err) {
@@ -363,8 +358,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	});
 	btnImport.addEventListener('click', async () => {
 		try {
-			const data = await load();
-			const content = JSON.parse(data);
+			const content = await load();
 			if (
 				typeof content.current !== 'string' ||
 				typeof content.areas !== 'object'
