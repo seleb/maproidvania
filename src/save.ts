@@ -1,4 +1,4 @@
-export async function save(data: string) {
+export async function save(data: FileSystemWriteChunkType) {
 	if (!('showSaveFilePicker' in window)) {
 		throw new Error('browser does not support native file system access');
 	}
@@ -12,7 +12,7 @@ export async function save(data: string) {
 			},
 		],
 	};
-	const handle = await window.showSaveFilePicker(options);
+	const handle: FileSystemFileHandle = await window.showSaveFilePicker(options);
 	const writable = await handle.createWritable();
 	await writable.write(data);
 	await writable.close();
