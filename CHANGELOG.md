@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/seleb/maproidvania/compare/v1.6.0...v1.6.1) (2024-06-08)
+
+
+### Bug Fixes
+
+* split up json stringify ([be2d062](https://github.com/seleb/maproidvania/commit/be2d0628160f3a4421b44128d8db2640094f1bf3))
+
 # [1.6.0](https://github.com/seleb/maproidvania/compare/v1.5.1...v1.6.0) (2024-06-08)
 
 
