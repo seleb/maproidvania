@@ -1,3 +1,19 @@
+# [1.6.0](https://github.com/seleb/maproidvania/compare/v1.5.1...v1.6.0) (2024-06-08)
+
+
+### Bug Fixes
+
+* brush drawing at wrong size when zoomed ([62cb401](https://github.com/seleb/maproidvania/commit/62cb4010816d100837f56cef363d2f687c014aa4))
+* brush size not applied on load ([77be659](https://github.com/seleb/maproidvania/commit/77be6594f4493d2ceaf06b34e28bf94f0673a57f))
+* cursor not showing proper brush size ([45d1501](https://github.com/seleb/maproidvania/commit/45d15011e30fba8f7e9ce66d3a28ab9e49b71987))
+* double default brush size to compensate for other size fixes ([d5fd2a4](https://github.com/seleb/maproidvania/commit/d5fd2a4464718c50cc426d16ea00a1635c393239))
+* search focus offsets by width of search results ([9562c2c](https://github.com/seleb/maproidvania/commit/9562c2cbcc3f2e781bd12f7bbebcc4c317c071ab))
+
+
+### Features
+
+* double click search result to zoom in ([611e819](https://github.com/seleb/maproidvania/commit/611e819ec4e49c596a96eccc8778d8c8944a7cd6))
+
 ## [1.5.1](https://github.com/seleb/maproidvania/compare/v1.5.0...v1.5.1) (2024-06-04)
 
 
