@@ -348,7 +348,11 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	});
 	btnExport.addEventListener('click', async () => {
 		try {
-			const data = JSON.stringify({ grid, current, areas }, undefined, '\t');
+			const data = `{ "grid": ${JSON.stringify(
+				grid
+			)}, "current": ${JSON.stringify(current)}, "areas": ${JSON.stringify(
+				areas
+			)} }`;
 			await save(data);
 			toast('exported');
 			dirty(false);
