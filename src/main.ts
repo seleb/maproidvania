@@ -32,6 +32,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	const layerText = document.querySelector<HTMLDivElement>('#text');
 	const divAbout = document.querySelector<HTMLDivElement>('#about');
 	const divCursor = document.querySelector<HTMLDivElement>('#cursor');
+	const divPing = document.querySelector<HTMLDivElement>('#ping');
 	const btnAboutToggle =
 		document.querySelector<HTMLButtonElement>('#btn-about');
 	const selectAreas = document.querySelector<HTMLSelectElement>('#areas');
@@ -80,6 +81,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		!layerText ||
 		!divAbout ||
 		!divCursor ||
+		!divPing ||
 		!btnSelect ||
 		!btnPan ||
 		!btnText ||
@@ -499,6 +501,14 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		);
 	};
 	rangeStroke.addEventListener('input', updateBrushSize);
+
+	const ping = (x: number, y: number) => {
+		divPing.style.left = `${x}px`;
+		divPing.style.top = `${y}px`;
+		divPing.classList.remove('show');
+		document.body.offsetHeight; // force reflow
+		divPing.classList.add('show');
+	};
 
 	const startDrawing = (event: PointerEvent, colour: string) => {
 		const size = parseFloat(rangeStroke.value) / (zoomEffective * 2);
@@ -1243,6 +1253,10 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			divMapContainer.clientWidth / 2 -
 			ulSearch.clientWidth / 2;
 		area.offset.y = y * zoomEffective - divMapContainer.clientHeight / 2;
+		ping(
+			divMapContainer.clientWidth / 2 + ulSearch.clientWidth / 2,
+			divMapContainer.clientHeight / 2
+		);
 		updateMap();
 	};
 	let search: Search;
