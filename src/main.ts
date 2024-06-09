@@ -1195,6 +1195,24 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			setTool('pin', lastPin);
 			return;
 		}
+		// f to center + zoom to roughly fit map
+		if (event.key === 'f') {
+			event.preventDefault();
+			const [minX, minY, maxX, maxY] = getMapBounds();
+			const targetZoom =
+				1 / (Math.max(Math.abs(maxX - minX), Math.abs(maxY - minY)) + 2);
+			area.zoom = 1;
+			updateZoomEffective();
+			while (zoomEffective > targetZoom && area.zoom > -100) {
+				--area.zoom;
+				updateZoomEffective();
+			}
+			focus(
+				((minX + maxX) / 2 + 0.5) * grid[0],
+				((minY + maxY) / 2 + 0.5) * grid[1]
+			);
+			return;
+		}
 	});
 
 	// zoom in/out
