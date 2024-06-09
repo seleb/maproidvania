@@ -1,3 +1,17 @@
+# [2.2.0](https://github.com/seleb/maproidvania/compare/v2.1.0...v2.2.0) (2024-06-09)
+
+
+### Bug Fixes
+
+* controls overflowing document ([38d8d95](https://github.com/seleb/maproidvania/commit/38d8d95d9da06fd55e7e5e2ebd63c957dc8c3f47))
+
+
+### Features
+
+* `f` centers + zooms out ([3e5462d](https://github.com/seleb/maproidvania/commit/3e5462d35899380c7095fd23ce3a6f8f3b344314))
+* focus offsets by better ratio of controls vs map ([e255dde](https://github.com/seleb/maproidvania/commit/e255dde9446569a4101ec65571ebe68072ac8053))
+* ping focused spot on map ([1e1bf38](https://github.com/seleb/maproidvania/commit/1e1bf38c19da5a6e891a081d31bd0f96576961cb))
+
 # [2.1.0](https://github.com/seleb/maproidvania/compare/v2.0.2...v2.1.0) (2024-06-08)
 
 
