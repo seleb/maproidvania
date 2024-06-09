@@ -576,9 +576,8 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		});
 	};
 
-	const updateGrid = () => {
-		layerImages.textContent = '';
-		const [minX, minY, maxX, maxY] = Object.keys(area.images).length
+	const getMapBounds = () =>
+		Object.keys(area.images).length
 			? Object.keys(area.images)
 					.map((i) => i.split('|').map((j) => parseInt(j, 10)))
 					.reduce(
@@ -591,6 +590,10 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 						[Infinity, Infinity, -Infinity, -Infinity]
 					)
 			: [0, 0, 0, 0];
+
+	const updateGrid = () => {
+		layerImages.textContent = '';
+		const [minX, minY, maxX, maxY] = getMapBounds();
 		for (let y = minY - 1; y <= maxY + 1; ++y) {
 			for (let x = minX - 1; x <= maxX + 1; ++x) {
 				const img = area.images[`${x}|${y}`];
