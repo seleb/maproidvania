@@ -1248,14 +1248,21 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 
 	// search
 	const focus = (x: number, y: number) => {
-		area.offset.x =
-			x * zoomEffective -
-			divMapContainer.clientWidth / 2 -
-			ulSearch.clientWidth / 2;
-		area.offset.y = y * zoomEffective - divMapContainer.clientHeight / 2;
+		let tx = 0;
+		let ty = 0;
+		if (
+			divControls.clientWidth / divMapContainer.clientWidth <
+			divControls.clientHeight / divMapContainer.clientHeight
+		) {
+			tx = divControls.clientWidth / 2;
+		} else {
+			ty = divControls.clientHeight / 2;
+		}
+		area.offset.x = x * zoomEffective - divMapContainer.clientWidth / 2 - tx;
+		area.offset.y = y * zoomEffective - divMapContainer.clientHeight / 2 - ty;
 		ping(
-			divMapContainer.clientWidth / 2 + ulSearch.clientWidth / 2,
-			divMapContainer.clientHeight / 2
+			divMapContainer.clientWidth / 2 + tx,
+			divMapContainer.clientHeight / 2 + ty
 		);
 		updateMap();
 	};
