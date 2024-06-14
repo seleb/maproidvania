@@ -87,7 +87,9 @@ export function set<K extends keyof State, V extends State[K]>(k: K, v: V) {
 }
 
 export function reset() {
-	set('grid', initialState.grid);
-	set('current', initialState.current);
-	set('areas', initialState.areas);
+	return Promise.all([
+		set('grid', initialState.grid),
+		set('current', initialState.current),
+		set('areas', initialState.areas),
+	]);
 }
