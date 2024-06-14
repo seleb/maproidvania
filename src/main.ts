@@ -1,6 +1,6 @@
 import { Search } from 'js-search';
 import simplify from 'simplify-path';
-import { Area, get, set } from './Storage';
+import { Area, get, reset, set } from './Storage';
 import { dirty } from './dirty';
 import { getPath, updatePath } from './drawing';
 import { highlight } from './highlight';
@@ -45,6 +45,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 	const btnSave = document.querySelector<HTMLButtonElement>('#btn-save');
 	const btnExport = document.querySelector<HTMLButtonElement>('#btn-export');
 	const btnImport = document.querySelector<HTMLButtonElement>('#btn-import');
+	const btnNew = document.querySelector<HTMLButtonElement>('#btn-new');
 	const btnSelect = document.querySelector<HTMLInputElement>('#btn-select');
 	const btnPan = document.querySelector<HTMLInputElement>('#btn-pan');
 	const btnText = document.querySelector<HTMLInputElement>('#btn-text');
@@ -94,6 +95,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		!btnSave ||
 		!btnExport ||
 		!btnImport ||
+		!btnNew ||
 		!btnColours.length ||
 		!rangeStroke ||
 		!btnPins.length ||
@@ -414,6 +416,44 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 		} catch (err) {
 			error(err);
 			window.alert(`error: failed to import - ${err.message}`);
+		} finally {
+			unpause();
+		}
+	});
+	btnNew.addEventListener('click', async () => {
+		const yeah = confirm(
+			"Create a new map?\nThis will clear the one currently saved in your browser, make sure to export a save file if you don't want to lose any data!"
+		);
+		if (!yeah) return;
+		try {
+			pause('resetting...');
+			const gridOld = grid;
+			const areasOld = areas;
+			const areaOld = current;
+			await reset();
+			const gridNew = get('grid');
+			const areasNew = get('areas');
+			const areaNew = get('current');
+			toast('reset');
+
+			pushUndoRedo({
+				name: 'import',
+				undo() {
+					grid = gridOld;
+					areas = areasOld;
+					setArea(areaOld);
+					dirty();
+				},
+				redo() {
+					grid = gridNew;
+					areas = areasNew;
+					setArea(areaNew);
+					dirty();
+				},
+			});
+		} catch (err) {
+			error(err);
+			window.alert(`error: failed to reset - ${err.message}`);
 		} finally {
 			unpause();
 		}
