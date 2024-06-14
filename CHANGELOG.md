@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/seleb/maproidvania/compare/v2.2.0...v2.3.0) (2024-06-14)
+
+
+### Features
+
+* add "new map" button to reset data ([e72e77c](https://github.com/seleb/maproidvania/commit/e72e77cb569417d1e8bc0afc6be7c6582b7d9211))
+
 # [2.2.0](https://github.com/seleb/maproidvania/compare/v2.1.0...v2.2.0) (2024-06-09)
 
 
