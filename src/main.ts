@@ -437,7 +437,7 @@ import { pushUndoRedo, redo, undo } from './undo-redo';
 			toast('reset');
 
 			pushUndoRedo({
-				name: 'import',
+				name: 'reset',
 				undo() {
 					grid = gridOld;
 					areas = areasOld;
