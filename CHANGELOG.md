@@ -1,3 +1,10 @@
+## [2.3.1](https://github.com/seleb/maproidvania/compare/v2.3.0...v2.3.1) (2024-06-15)
+
+
+### Bug Fixes
+
+* reset action name ([b1db796](https://github.com/seleb/maproidvania/commit/b1db796c18c558ca9e3c818446cf70e7cd54479f))
+
 # [2.3.0](https://github.com/seleb/maproidvania/compare/v2.2.0...v2.3.0) (2024-06-14)
 
 
